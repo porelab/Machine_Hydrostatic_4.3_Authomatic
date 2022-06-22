@@ -53,6 +53,7 @@ import javafx.scene.text.Font;
 	@Override
 	public void start(Stage primaryStage) {
 	repoen(primaryStage);
+	
 	}
 
 	void repoen(Stage primaryStage)

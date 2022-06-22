@@ -1340,8 +1340,8 @@ catch (Exception e) {
 					addRowsToTable(tablem, data.get(j), 1, false, true, bordercolor, backgroundcolor, 25f, tabledata);
 				}
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
 				}
 
 			}	

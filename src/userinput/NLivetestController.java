@@ -83,6 +83,7 @@ public class NLivetestController implements Initializable {
 	ScrollPane scrollrecord;
 
 	static SimpleBooleanProperty isRestart;
+	static SimpleBooleanProperty isWarningDone;
 
 	List<Double> recorddata, recordtime;
 
@@ -488,6 +489,7 @@ public class NLivetestController implements Initializable {
 		addShortCut();
 
 		isRestart = new SimpleBooleanProperty(false);
+		isWarningDone = new SimpleBooleanProperty(false);
 		isSkiptest.set(false);
 		Myapp.testtrial = "4";
 		trails = Integer.parseInt(Myapp.testtrial);
@@ -539,7 +541,26 @@ public class NLivetestController implements Initializable {
 
 				if (newValue) {
 					System.out.println("bubble call");
-					bubbleClicknew();
+					//bubbleClicknew();
+					
+					Timer timer = new Timer();
+					TimerTask task = new TimerTask() {
+						public void run() {
+
+							Platform.runLater(new Runnable() {
+
+								@Override
+								public void run() {
+									mydia = new MyDialoug(Main.mainstage, "/userinput/pistonwarrningpopup.fxml");
+
+									mydia.showDialoug();
+
+								}
+							});
+						}
+
+					};
+					timer.schedule(task, 1500);
 				}
 
 			}
@@ -559,6 +580,22 @@ public class NLivetestController implements Initializable {
 			}
 		});
 
+		
+		isWarningDone.addListener(new ChangeListener<Boolean>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable,
+					Boolean oldValue, Boolean newValue) {
+				
+					if(newValue)
+					{
+						bubbleClicknew();
+						
+					}
+				
+			}
+		});
+		
 		btnpass.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -668,6 +705,14 @@ public class NLivetestController implements Initializable {
 				}
 
 				Mycommand.sendAdcEnableBits("101", 0);
+				try {
+
+					Thread.sleep(minde);
+				} catch (Exception e) {
+
+				}
+				
+				Mycommand.valveOn('5', 0);
 				try {
 
 					Thread.sleep(minde);
@@ -1422,6 +1467,14 @@ public class NLivetestController implements Initializable {
 // send stop protocol to MCU
 	void sendStopCmd() {
 
+		Mycommand.valveOff('5', 0);
+		try {
+
+			Thread.sleep(1000);
+		} catch (Exception e) {
+
+		}
+		
 		Mycommand.stopADC(0);
 		Mycommand.setDACValue('1', 0, 500);
 		Mycommand.valveOn('1', 950);

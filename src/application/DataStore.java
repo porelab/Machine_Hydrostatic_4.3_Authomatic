@@ -662,9 +662,16 @@ public class DataStore
 	public static double toCmh2o(String psi) {
 		return Double.parseDouble(psi) * 70.307;
 	}
+	public static double toMbar(String psi) {
+		return Double.parseDouble(psi) * 68.9475729;
+	}
 	
 	public static double toCmh2o(double psi) {
 		return psi * 70.307;
+	}
+	
+	public static double toMbar(double psi) {
+		return psi *  68.9475729;
 	}
 	
 	public static double toTorr(double psi) {
@@ -756,6 +763,10 @@ public class DataStore
 		{
 			ans=toCmh2o(pressure);
 		}
+		else if(DataStore.getUnitepressure().equals("mbar"))
+		{
+			ans=toMbar(pressure);
+		}
 		else {
 			ans = Double.parseDouble(pressure);
 		}
@@ -793,6 +804,14 @@ public class DataStore
 				data.add(toCmh2o(pressure.get(i))+"");
 			}
 		}
+		else if(DataStore.getUnitepressure().equals("mbar"))
+		{
+			for(int i=0;i<pressure.size();i++)
+			{
+				data.add(toMbar(pressure.get(i))+"");
+			}
+			
+		}
 		else
 		{
 		data.addAll(pressure);
@@ -818,6 +837,11 @@ public class DataStore
 		else if(DataStore.getUnitepressure().equals("cmH2O"))
 		{
 			pressure=toCmh2o(pressure);
+		}
+		else if(DataStore.getUnitepressure().equals("mbar"))
+		{
+			pressure=toMbar(pressure);
+			
 		}
 		
 		return Myapp.getRoundDouble(pressure, getRoundOff());

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="root" maxHeight="180.0" maxWidth="485.0" minHeight="180.0" minWidth="485.0" prefHeight="180.0" prefWidth="485.0" style="-fx-border-width: 5; -fx-border-color: white;" styleClass="firstpagebk" stylesheets="@../application/new_application.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="userinput.pistonwaringController">
+	<children>
+		<ImageView fitHeight="48.0" fitWidth="198.0" layoutY="5.0" pickOnBounds="true" AnchorPane.bottomAnchor="127.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+			<image>
+				<Image url="@saveproject.png" />
+			</image>
+		</ImageView>
+		<Button fx:id="btnyes" layoutX="169.0" layoutY="114.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="147.0" style="-fx-background-radius: 50;" styleClass="background-col-white" text="Start Test" textFill="#254f94" AnchorPane.leftAnchor="169.0" AnchorPane.topAnchor="114.0">
+			<font>
+				<Font name="System Bold" size="15.0" />
+			</font>
+			<cursor>
+				<Cursor fx:constant="HAND" />
+			</cursor>
+		</Button>
+		<Label layoutX="55.0" layoutY="30.0" styleClass="font-montserrat-semiBold" text="Warning" textFill="#254f94" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="10.0">
+			<font>
+				<Font name="System Bold" size="18.0" />
+			</font>
+		</Label>
+		<Button fx:id="btncancel" layoutX="243.0" layoutY="130.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="86.0" style="-fx-background-radius: 50;" styleClass="background-col-white" text="No" textFill="#254f94" visible="false" AnchorPane.leftAnchor="280.0" AnchorPane.topAnchor="125.0">
+			<font>
+				<Font name="System Bold" size="15.0" />
+			</font>
+			<cursor>
+				<Cursor fx:constant="HAND" />
+			</cursor>
+		</Button>
+		<Label layoutX="254.0" layoutY="112.0" />
+		<Label layoutX="47.0" layoutY="64.0" text="Please stay away from sample chamber !" textFill="WHITE" AnchorPane.leftAnchor="47.0" AnchorPane.topAnchor="64.0">
+			<font>
+				<Font size="22.0" />
+			</font>
+		</Label>
+	</children>
+</AnchorPane>

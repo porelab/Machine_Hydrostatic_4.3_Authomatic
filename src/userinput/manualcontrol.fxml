@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.*?>
-<?import com.jfoenix.controls.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXToggleButton?>
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" prefHeight="768.0" prefWidth="1368.0" styleClass="bgwhite" stylesheets="@../application/new_application.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="userinput.manualcontroller">
+<AnchorPane fx:id="root" prefHeight="768.0" prefWidth="1368.0" styleClass="bgwhite" stylesheets="@../application/new_application.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="userinput.manualcontroller">
    <children>
       <AnchorPane layoutX="-2.0" layoutY="42.0" prefHeight="658.0" prefWidth="1366.0" styleClass="bgwhite" stylesheets="@../application/new_application.css" AnchorPane.topAnchor="10.0">
          <children>
             <AnchorPane fx:id="ap4" layoutX="607.0" layoutY="436.0" prefHeight="86.0" prefWidth="116.0" visible="false" AnchorPane.topAnchor="435.0" />
             <AnchorPane fx:id="ap3" layoutX="612.0" layoutY="272.0" prefHeight="86.0" prefWidth="116.0" visible="false" AnchorPane.topAnchor="272.0" />
-            <ImageView fitHeight="447.0" fitWidth="1250.0" layoutX="40.0" layoutY="99.0" pickOnBounds="true" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="99.0">
+            <ImageView fitHeight="447.0" fitWidth="1250.0" layoutX="39.0" layoutY="100.0" pickOnBounds="true" AnchorPane.leftAnchor="39.0" AnchorPane.topAnchor="100.0">
                <image>
                   <Image url="@HPA-Manual%20Control-002.png" />
                </image>
@@ -206,7 +211,7 @@
             </Label>
             <Rectangle fx:id="rectmain" arcHeight="5.0" arcWidth="5.0" fill="#ffffff00" height="430.0" layoutX="-60.0" layoutY="168.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" visible="false" width="1387.0" AnchorPane.topAnchor="168.0" />
             <ToggleButton fx:id="valve3" layoutX="367.0" layoutY="410.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="67.0" styleClass="cmbtrasperant" />
-            <ToggleButton fx:id="valve4" layoutX="877.0" layoutY="443.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="67.0" styleClass="cmbtrasperant" />
+            <ToggleButton fx:id="valve4" layoutX="875.0" layoutY="445.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="67.0" styleClass="cmbtrasperant" />
             <AnchorPane layoutX="351.0" layoutY="561.0" maxWidth="600.0" minWidth="600.0" prefHeight="180.0" prefWidth="600.0">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="294.0" layoutY="12.0" prefHeight="40.0" prefWidth="261.0" text="Pressure Gauge" textFill="#0d3c88" AnchorPane.leftAnchor="294.0" AnchorPane.topAnchor="12.0">
@@ -282,6 +287,28 @@
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="180.0" layoutY="-1.0" stroke="#3489e4" strokeType="INSIDE" strokeWidth="2.0" width="600.0" />
                </children>
             </AnchorPane>
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="805.0" layoutY="113.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@p1.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="imgp2" fitHeight="74.0" fitWidth="28.0" layoutX="826.0" layoutY="237.0" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@p2.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="882.0" layoutY="262.0" styleClass="col-gray70" text="UP" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="968.0" layoutY="257.0" prefHeight="32.0" prefWidth="64.0" styleClass="col-gray70" text="DOOWN" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Rectangle arcHeight="300.0" arcWidth="30.0" fill="#1f93ff00" height="28.0" layoutX="917.0" layoutY="259.0" stroke="#bfb9b9" strokeType="INSIDE" strokeWidth="2.0" style="-fx-fill: white;" width="46.0" />
+            <JFXToggleButton fx:id="tgbpiston" alignment="BASELINE_CENTER" layoutX="907.0" layoutY="245.0" text=" " toggleColor="#0e3c87" toggleLineColor="WHITE" unToggleLineColor="#99999903" />
          </children>
          <cursor>
             <Cursor fx:constant="DEFAULT" />

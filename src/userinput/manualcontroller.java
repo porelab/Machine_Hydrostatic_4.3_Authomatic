@@ -9,9 +9,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.TooManyListenersException;
 
+import com.jfoenix.controls.JFXToggleButton;
+
 import ConfigurationPart.NConfigurePageController;
 import communicationProtocol.Mycommand;
-
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
@@ -72,6 +73,9 @@ public class manualcontroller implements Initializable {
 	double b ;
 	@FXML
 	ToggleButton recordbtn;
+	
+	@FXML
+	JFXToggleButton tgbpiston;
 
 	@FXML
 	AnchorPane root;
@@ -94,7 +98,7 @@ public class manualcontroller implements Initializable {
 
 	@FXML
 	ImageView v1, v2, v3, v4, v5new, liveimg, imgreg1, imgv1, imgreg2, imgv2,
-			imgv3, imgv4, imgv5, onoffimg;
+			imgv3, imgv4, imgv5, onoffimg,imgp2;
 
 	@FXML
 	ToggleButton valve1, valve2, valve3, valve4, valve5new, valveonoff;
@@ -191,6 +195,28 @@ public class manualcontroller implements Initializable {
 		
 		}
 		
+		
+		tgbpiston.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent arg0) {
+				if (tgbpiston.isSelected()) {
+					
+					
+					imgp2.setVisible(true);
+					System.out.println("IS Selected Piston");
+					Mycommand.valveOn('5', 0);
+					
+		        } else {
+		        	
+		        	Mycommand.valveOff('5', 0);
+		        	imgp2.setVisible(false);
+		        	System.out.println("IS Not Selected Piston");
+		        }
+				
+			}
+		});
+	
 		
 		/* Manual Controller */
 

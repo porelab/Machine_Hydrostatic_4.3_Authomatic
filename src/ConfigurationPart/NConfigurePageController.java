@@ -220,7 +220,7 @@ selectelowhigh();
 	
 		DataStore.getthfirstbp();
 		// cmbcom.getItems().addAll("Test", "Test2", "Test3");
-		cmbpress.getItems().addAll("psi", "bar", "torr","kilopascal","cmH2O");
+		cmbpress.getItems().addAll("psi", "bar","mbar", "torr","kilopascal","cmH2O");
 		cmbflow.getItems().addAll("sccm", "sccs","cfm");
 		cmblenghth.getItems().addAll("nm", "µm");
 		cmbroundoff.getItems().addAll("1", "2", "3","4","5");
