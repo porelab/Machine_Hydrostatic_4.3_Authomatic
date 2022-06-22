@@ -1,0 +1,20 @@
+hydrostatic
+testname,hydrostatic
+result,
+bpressure,0.0
+sample,ss
+fluidname,Water
+fluidvalue,72.0
+mode,Mode 1
+record,
+duration,0 min:24 sec
+durationsecond,24
+testtime,16:04:40
+testdate,16/07/2020
+customerid,N0048
+indistry,Textile
+application,Geotextiles
+splate,Small
+p1,
+ans,
+t,
