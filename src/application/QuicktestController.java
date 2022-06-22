@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXSlider;
 
+import Constants.MyContants;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -20,19 +21,18 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
-import myconstant.Myconstant;
 import toast.MyDialoug;
 import toast.Openscreen;
 import toast.Toast;
 
 public class QuicktestController implements Initializable {
 
-	static String selectedrad1 = "", selectedrad2 = "";
+	static String selectedrad1 = "", selectedrad2 = "", modeselectedrad = "";
 
-	static ToggleGroup tgb1, tgb2;
+	static ToggleGroup tgb1, tgb2,tgbmode;
 
 	@FXML
-	Button starttest, btncancel,btnaddsamplearea,btndelete;
+	Button starttest, btncancel,btnaddsamplearea,btndelete,btndelete1;
 
 	@FXML
 	RadioButton rdmanual, rdautometed, rdregular, rdfast;
@@ -50,17 +50,21 @@ public class QuicktestController implements Initializable {
 	AnchorPane ancaddsamplearea;
 	
 	@FXML
-	TextField txtsamplearea,txtlotno;
+	TextField txtsamplearea,txtlotno,txtmaxpres;
+	
+	@FXML
+	RadioButton rdmode1,rdmode2;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-
+		btndelete.setVisible(false);
 		stepsizeslider.setMin(1);
 		stepsizeslider.setValue(15);
 		setTestMode();
 		setStepSize();
 		LoadSamples();
+		setSamplemode();
 
 		stepsizeslider.valueProperty().addListener(new ChangeListener<Number>() {
 
@@ -69,7 +73,7 @@ public class QuicktestController implements Initializable {
 
 				double v = (double) newValue;
 
-				Myconstant.stepsize = "" + (int) v;
+				MyContants.stepsize = "" + (int) v;
 
 				lblnote.setText("Note : This will plot " + (60 / (int) v) + " Readings in 1 Minutes.");
 
@@ -87,6 +91,7 @@ public class QuicktestController implements Initializable {
 
 			}
 		});
+		
 
 		starttest.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -94,14 +99,21 @@ public class QuicktestController implements Initializable {
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
 
-				teststart();
+				if(!cmbsampleid.getValue().equals(""))
+					{
+					teststart();
+			} else {
+				Toast.makeText(Main.mainstage,
+						"Enter Sample name...!", 1500, 500, 500);
+
+			}
 
 			}
 		});
 
 		getSampleareadata();
 		
-		cmbsamplearea.valueProperty().addListener(new ChangeListener<String>() {
+	/*	cmbsamplearea.valueProperty().addListener(new ChangeListener<String>() {
 
 			@Override
 			public void changed(ObservableValue<? extends String> observable,
@@ -122,7 +134,7 @@ public class QuicktestController implements Initializable {
 						Database d = new Database();
 						List<List<String>> data = d.getData(deld);
 
-						Myconstant.samplearea = "" + newValue;
+						MyContants.samplearea = "" + newValue;
 						
 						//if (data.get(0).get(0).equals("0")) {
 							btndelete.setVisible(true);
@@ -138,7 +150,7 @@ public class QuicktestController implements Initializable {
 					ancaddsamplearea.setVisible(false);
 				}
 			}
-		});
+		});*/
 		
 		btnaddsamplearea.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -160,7 +172,67 @@ public class QuicktestController implements Initializable {
 			}
 		});
 		
+		
+		btndelete1.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO Auto-generated method stub
+				setDeletesample();
+			}
+		});
+		
 	}
+	
+	void setDeletesample() {
+		String ss = cmbsampleid.getSelectionModel().getSelectedItem();
+		String del = "delete from quicktest where sampleid='"
+				+ ss+ "'";
+		Database database = new Database();
+		if (database.Insert(del)) {
+			cmbsampleid.getItems().remove(ss);
+			txtlotno.setText("");
+			txtmaxpres.setText("");
+		} else {
+
+		}
+	}
+	
+	void setSamplemode() {
+
+		tgbmode = new ToggleGroup();
+
+		
+		rdmode1.setToggleGroup(tgbmode);
+		rdmode1.setUserData("1");
+		rdmode2.setToggleGroup(tgbmode);
+		rdmode2.setUserData("2");
+		
+		modeselectedrad = "1";
+		MyContants.smode = "mode1";
+
+		tgbmode.selectedToggleProperty().addListener(
+				new ChangeListener<Toggle>() {
+
+					@Override
+					public void changed(ObservableValue<? extends Toggle> arg0,
+							Toggle arg1, Toggle arg2) {
+
+						modeselectedrad = arg2.getUserData().toString();
+
+						if (modeselectedrad.equals("1")) {
+							MyContants.smode = "mode1";
+						}
+
+						 else {
+							 MyContants.smode = "mode2";
+						}
+
+					}
+				});
+
+	}
+	
 
 	void setTestMode() {
 
@@ -172,7 +244,7 @@ public class QuicktestController implements Initializable {
 		rdautometed.setUserData("2");
 
 		selectedrad1 = "1";
-		Myconstant.testmode = "manual";
+		MyContants.testmode = "manual";
 
 		tgb1.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
 
@@ -182,11 +254,11 @@ public class QuicktestController implements Initializable {
 				selectedrad1 = arg2.getUserData().toString();
 
 				if (selectedrad1.equals("1")) {
-					Myconstant.testmode = "manual";
+					MyContants.testmode = "manual";
 				}
 
 				else {
-					Myconstant.testmode = "automated";
+					MyContants.testmode = "automated";
 				}
 
 			}
@@ -204,7 +276,7 @@ public class QuicktestController implements Initializable {
 		rdfast.setUserData("2");
 
 		selectedrad2 = "1";
-		Myconstant.pressurerate = "regular";
+		MyContants.pressurerate = "regular";
 
 		tgb2.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
 
@@ -214,11 +286,11 @@ public class QuicktestController implements Initializable {
 				selectedrad2 = arg2.getUserData().toString();
 
 				if (selectedrad2.equals("1")) {
-					Myconstant.pressurerate = "regular";
+					MyContants.pressurerate = "regular";
 				}
 
 				else {
-					Myconstant.pressurerate = "fast";
+					MyContants.pressurerate = "fast";
 				}
 
 			}
@@ -228,24 +300,25 @@ public class QuicktestController implements Initializable {
 
 	void teststart() {
 
-		Myconstant.sampleid = "" + cmbsampleid.getValue();
-		Myconstant.lotno= ""+txtlotno.getText();
-		Myconstant.samplearea=""+cmbsamplearea.getValue();
+		MyContants.sampleid = "" + cmbsampleid.getValue();
+		MyContants.lotno= ""+txtlotno.getText();
+		MyContants.maxpressure= ""+txtmaxpres.getText();
+		//MyContants.samplearea=""+cmbsamplearea.getValue();
 
 		Database d1 = new Database();
 		
 
 		String laststatue = "update quicktest set last='false'";
 		d1.Insert(laststatue);
-		System.out.println("ASLASLLLLLLLLLLLLLL"+laststatue);
+		//System.out.println("ASLASLLLLLLLLLLLLLL"+laststatue);
 
-		if (d1.isExist("select * from quicktest where sampleid='"+Myconstant.sampleid+"'")) {
+		if (d1.isExist("select * from quicktest where sampleid='"+MyContants.sampleid+"'")) {
 
 			
 			
 			
 				
-				String updatequick = "update quicktest set sampleid='" + cmbsampleid.getValue() +"', testmode='"+Myconstant.testmode+"', stepsize='"+Myconstant.stepsize+"' ,pressurerate='"+Myconstant.pressurerate+"',lotno='"+Myconstant.lotno+"',sarea='"+Myconstant.samplearea+"',last='true'   where sampleid='" + Myconstant.sampleid + "'";
+				String updatequick = "update quicktest set sampleid='" + cmbsampleid.getValue() +"', testmode='0', stepsize='"+MyContants.stepsize+"' ,pressurerate='0',lotno='"+MyContants.lotno+"',sarea='0',maxpres='"+MyContants.maxpressure+"',smode='"+MyContants.smode+"',last='true' where sampleid='" + MyContants.sampleid + "'";
 
 				if(d1.Insert(updatequick))
 				{
@@ -269,8 +342,8 @@ public class QuicktestController implements Initializable {
 
 		else {
 			
-			if (d1.Insert("INSERT INTO quicktest VALUES('" + Myconstant.sampleid + "','" + Myconstant.testmode + "','"
-					+ Myconstant.stepsize + "','" + Myconstant.pressurerate + "','" + Myconstant.lotno + "','" + Myconstant.samplearea + "','" + Myapp.email + "','true')")) {
+			if (d1.Insert("INSERT INTO quicktest VALUES('" + MyContants.sampleid + "','" + MyContants.testmode + "','"
+					+ MyContants.stepsize + "','" + MyContants.pressurerate + "','" + MyContants.lotno + "','" + MyContants.samplearea + "','" + Myapp.email + "','true','" + MyContants.maxpressure + "','" + MyContants.smode + "')")) {
 			//	System.out.println("Insert data New Sample");
 				//lastsample();
 				MyDialoug.closeDialoug();
@@ -296,7 +369,7 @@ public class QuicktestController implements Initializable {
 		List<List<String>> info = d.getData("select sampleid from quicktest");
 		try {
 
-		cmbsampleid.getItems().add(""+laststatue.get(0).get(0));
+	//	cmbsampleid.getItems().add(""+laststatue.get(0).get(0));
 			
 			for (int i = 0; i < info.size(); i++) {
 				cmbsampleid.getItems().add(info.get(i).get(0));
@@ -306,13 +379,16 @@ public class QuicktestController implements Initializable {
 			Exception ss;
 		}
 
+
+		
 		if (cmbsampleid.getItems().size() > 0) {
+			btndelete.setVisible(true);
 			cmbsampleid.valueProperty().addListener(new ChangeListener<String>() {
 
 				@Override
 				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 					// TODO Auto-generated method stub
-
+try {
 					if (newValue.equals(""+laststatue.get(0).get(0))) {
 
 							setLastData();
@@ -320,7 +396,13 @@ public class QuicktestController implements Initializable {
 					} else {
 						LoadSampleData(newValue);
 					}
+					
+				} catch (Exception e) {
+					// TODO: handle exception
 				}
+
+				}
+
 			});
 
 			cmbsampleid.getSelectionModel().select(0);
@@ -339,39 +421,53 @@ public class QuicktestController implements Initializable {
 		String testmode = "" + alldata.get(0).get(1);
 
 		String stepsizesliders = (alldata.get(0).get(2));
-		Myconstant.stepsize = (stepsizesliders);
+		MyContants.stepsize = (stepsizesliders);
 		stepsizeslider.setValue(Double.parseDouble(stepsizesliders));
 
 		String pressurerate = "" + alldata.get(0).get(3);
 		
 		
-		Myconstant.lotno =""+ alldata.get(0).get(4);
-		
-		txtlotno.setText(Myconstant.lotno);
+		MyContants.lotno =""+ alldata.get(0).get(4);
+		MyContants.maxpressure =""+ alldata.get(0).get(8);
+		String smode =""+ alldata.get(0).get(9);
+		txtlotno.setText(MyContants.lotno);
+		txtmaxpres.setText(MyContants.maxpressure);
 
-		cmbsamplearea.setValue(""+ alldata.get(0).get(5));
+		//cmbsamplearea.setValue(""+ alldata.get(0).get(5));
+		
+		
+		
+		if (smode.equals("mode1")) {
+			rdmode1.selectedProperty().set(true);
+			MyContants.smode = "rdmode1";
+
+		} else {
+			rdmode2.selectedProperty().set(true);
+			MyContants.smode = "rdmode2";
+		}
+		
 		
 	
 		/* Test Mode */
 
 		if (testmode.equals("manual")) {
 			rdmanual.selectedProperty().set(true);
-			Myconstant.testmode = "manual";
+			MyContants.testmode = "manual";
 
 		} else {
 			rdautometed.selectedProperty().set(true);
-			Myconstant.testmode = "automated";
+			MyContants.testmode = "automated";
 		}
 
 		/* Pressure Rate */
 
 		if (pressurerate.equals("regular")) {
 			rdregular.selectedProperty().set(true);
-			Myconstant.pressurerate = "regular";
+			MyContants.pressurerate = "regular";
 
 		} else {
 			rdfast.selectedProperty().set(true);
-			Myconstant.pressurerate = "fast";
+			MyContants.pressurerate = "fast";
 
 		}
 
@@ -388,40 +484,53 @@ public class QuicktestController implements Initializable {
 		String testmode = "" + alldata.get(0).get(1);
 
 		String stepsizesliders = (alldata.get(0).get(2));
-		Myconstant.stepsize = (stepsizesliders);
+		MyContants.stepsize = (stepsizesliders);
 		
 		stepsizeslider.setValue(Double.parseDouble(stepsizesliders));
 
 		String pressurerate = "" + alldata.get(0).get(3);
 		
-		Myconstant.lotno =""+ alldata.get(0).get(4);
-		Myconstant.samplearea =""+ alldata.get(0).get(5);
+		MyContants.lotno =""+ alldata.get(0).get(4);
+		MyContants.samplearea =""+ alldata.get(0).get(5);
+		MyContants.maxpressure =""+ alldata.get(0).get(8);
+		String smode =""+ alldata.get(0).get(9);
 		
-		txtlotno.setText(Myconstant.lotno);
+		txtlotno.setText(MyContants.lotno);
+		txtmaxpres.setText(MyContants.maxpressure);
 
-		cmbsamplearea.setValue(Myconstant.samplearea);
+		cmbsamplearea.setValue(MyContants.samplearea);
 
+		/* sample Mode */
+
+		if (smode.equals("mode1")) {
+			rdmode1.selectedProperty().set(true);
+			MyContants.smode = "rdmode1";
+
+		} else {
+			rdmode2.selectedProperty().set(true);
+			MyContants.smode = "rdmode2";
+		}
 		
 		/* Test Mode */
 
 		if (testmode.equals("manual")) {
 			rdmanual.selectedProperty().set(true);
-			Myconstant.testmode = "manual";
+			MyContants.testmode = "manual";
 
 		} else {
 			rdautometed.selectedProperty().set(true);
-			Myconstant.testmode = "automated";
+			MyContants.testmode = "automated";
 		}
 
 		/* Pressure Rate */
 
 		if (pressurerate.equals("regular")) {
 			rdregular.selectedProperty().set(true);
-			Myconstant.pressurerate = "regular";
+			MyContants.pressurerate = "regular";
 
 		} else {
 			rdfast.selectedProperty().set(true);
-			Myconstant.pressurerate = "fast";
+			MyContants.pressurerate = "fast";
 		}
 
 
@@ -432,15 +541,17 @@ public class QuicktestController implements Initializable {
 		Database d1 = new Database();
 		try {
 			
-			Myconstant.sampleid = ""+cmbsampleid.getValue();
-			Myconstant.lotno= ""+txtlotno.getText();
-			Myconstant.samplearea=""+cmbsamplearea.getValue();
+			MyContants.sampleid = ""+cmbsampleid.getValue();
+			MyContants.lotno= ""+txtlotno.getText();
+			MyContants.samplearea=""+cmbsamplearea.getValue();
+			MyContants.maxpressure= ""+txtmaxpres.getText();
 
+			
 
 			if (!d1.isExist("select * from quicklastsample where emailid='"
 					+ Myapp.email + "'")) {
 
-				if (d1.Insert("INSERT INTO quicklastsample VALUES( '"+ Myapp.email + "','"+Myconstant.sampleid+"', '"+Myconstant.testmode+"', '"+Myconstant.stepsize+"', '"+Myconstant.pressurerate+"', '"+Myconstant.lotno+"', '"+Myconstant.samplearea+"')")) 
+				if (d1.Insert("INSERT INTO quicklastsample VALUES( '"+ Myapp.email + "','"+MyContants.sampleid+"', '"+MyContants.testmode+"', '"+MyContants.stepsize+"', '"+MyContants.pressurerate+"', '"+MyContants.lotno+"', '"+MyContants.samplearea+"', '"+MyContants.maxpressure+"', '"+MyContants.smode+"')")) 
 				
 				{
 					// System.out.println("Last Project Insert data");
@@ -450,8 +561,8 @@ public class QuicktestController implements Initializable {
 			} else {
 
 				String updatequry = "update quicklastsample set sampleid='"
-						+ Myconstant.sampleid + "',testmode='"
-						+ Myconstant.testmode + "',stepsize='"+Myconstant.stepsize+"',pressurerate='"+Myconstant.pressurerate+"',lotno='"+Myconstant.lotno+"',sarea='"+Myconstant.samplearea+"'  where emailid='" + Myapp.email
+						+ MyContants.sampleid + "',testmode='"
+						+ MyContants.testmode + "',stepsize='"+MyContants.stepsize+"',pressurerate='"+MyContants.pressurerate+"',lotno='"+MyContants.lotno+"',sarea='"+MyContants.samplearea+"',maxpres='"+MyContants.maxpressure+"',smode='"+MyContants.smode+"'  where emailid='" + Myapp.email
 						+ "'";
 
 				if (d1.Insert(updatequry)) {
@@ -511,7 +622,7 @@ public class QuicktestController implements Initializable {
 				cmbsamplearea.getItems().add(
 						info.get(i).get(0));
 
-				Myconstant.samplearea = "" + info.get(i).get(0);
+				MyContants.samplearea = "" + info.get(i).get(0);
 			}
 			cmbsamplearea.getSelectionModel().select(1);
 		} catch (Exception e) {

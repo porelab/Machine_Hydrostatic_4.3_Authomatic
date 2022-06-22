@@ -1,0 +1,20 @@
+hydrostatic
+testname,hydrostatic
+result,pass
+bpressure,4.814268652780957
+sample,Gown GX100
+fluidname,Water
+fluidvalue,72.0
+mode,Mode 1
+recordy,
+recordx,
+duration,0 min:19 sec
+durationsecond,19
+testtime,18:15:52
+testdate,30/01/2021
+customerid,N0048
+indistry,Protective Wear
+application,PPE
+splate,Small
+ans,4.814268652780957
+t,17.0

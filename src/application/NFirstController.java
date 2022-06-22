@@ -103,7 +103,7 @@ public class NFirstController implements Initializable {
 								200, 200);
 
 					} else {
-						connectHardware();
+						connectHardware(DataStore.getCom());
 
 						if (DataStore.connect_hardware.get()) {
 							DataStore.hardReset();
@@ -126,7 +126,7 @@ public class NFirstController implements Initializable {
 								200, 200);
 
 					} else {
-						connectHardware();
+						connectHardware(DataStore.getCom());
 
 						if (DataStore.connect_hardware.get()) {
 							DataStore.hardReset();
@@ -171,6 +171,8 @@ public class NFirstController implements Initializable {
 		
 		
 		DataStore.isconfigure.set(true);
+		DataStore.sc = new SerialCommunicator();
+
 		addShortCut();
 		if (DataStore.connect_hardware.get()) {
 
@@ -201,7 +203,7 @@ public class NFirstController implements Initializable {
 			}
 		});
 
-		connectHardware();
+		connectHardware(DataStore.getCom());
 
 		txtuname.setText("Welcome, " + Myapp.username);
 		System.out.println("usename--:" + Myapp.username);
@@ -323,9 +325,14 @@ public class NFirstController implements Initializable {
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
 				if (DataStore.connect_hardware.get()) {
-				
+					DataStore.hardReset();
 				} else {
-					
+					connectHardware(DataStore.getCom());
+
+					if (DataStore.connect_hardware.get()) {
+						DataStore.hardReset();
+					}
+
 				}
 
 			}
@@ -454,17 +461,10 @@ public class NFirstController implements Initializable {
 		});
 
 	}
-	
-	public void connectHardware()
-	{
-		
-		
-		
-	}
 
 	public void quicktest() {
 		Database db = new Database();
-try {
+
 		if (db.isExist("select * from lastprojects where lid='" + Myapp.email
 				+ "' ")) {
 			System.out.println("1 Last project.");
@@ -475,8 +475,7 @@ try {
 			// mydia=new MyDialoug(Main.mainstage,
 			// "/userinput/popupresult.fxml");
 
-//			mydia = new MyDialoug(Main.mainstage, "/application/popfxml.fxml");
-
+			//mydia = new MyDialoug(Main.mainstage, "/application/popfxml.fxml");
 			mydia = new MyDialoug(Main.mainstage, "/application/Quicktest.fxml");
 
 			mydia.showDialoug();
@@ -500,10 +499,6 @@ try {
 			System.out.println("No Last project.");
 			Toast.makeText(Main.mainstage, "You Don't have any previous test",
 					2000, 300, 300);
-		}
-}
-		catch (Exception e) {
-			// TODO: handle exception
 		}
 	}
 
@@ -562,7 +557,51 @@ try {
 		t.start();
 	}
 
-	
+	public boolean connectHardware(String st) {
+
+		boolean bol = false;
+
+		// sendDataToWeb();
+		Enumeration pList = CommPortIdentifier.getPortIdentifiers();
+
+		int count = 0;
+
+		while (pList.hasMoreElements()) {
+
+			CommPortIdentifier cpi = (CommPortIdentifier) pList.nextElement();
+			System.out.print("Port " + cpi.getName() + " " + cpi.getPortType());
+			if (cpi.getName().equals(st)) {
+				DataStore.connect_hardware.set(true);
+				try {
+
+					DataStore.sc.connect(st);
+					bol = true;
+					Myapp.hb.set(false);
+
+				} catch (Exception e) {
+
+					e.printStackTrace();
+				}
+
+				break;
+			}
+
+			System.out.println("PORT :" + cpi.getName());
+			count++;
+		}
+
+		if (bol == false) {
+			// Toast.makeText(Main.mainstage,
+			// "Hardware not connected please plugout and plugin", 200, 200,
+			// 3000);
+		} else {
+			// Toast.makeText(Main.mainstage, "Successfully Connected", 200,
+			// 200, 3000);
+
+		}
+
+		return bol;
+	}
 
 	void setMainBtns() {
 

@@ -2,6 +2,7 @@ package userinput;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -9,22 +10,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TooManyListenersException;
 
-import javax.imageio.ImageIO;
+import com.jfoenix.controls.JFXDialog;
 
-import com.google.common.util.concurrent.ExecutionError;
-
+import Constants.MyContants;
+import Notification.Notification.Notifier;
 import application.DataStore;
 import application.Main;
 import application.Myapp;
+import application.SerialWriter;
 import application.writeFormat;
-import communicationProtocol.Webservices;
+import communicationProtocol.Mycommand;
 import data_read_write.CalculatePorometerData;
 import data_read_write.CsvWriter;
 import de.tesis.dynaware.javafx.fancychart.zoom.Zoom;
@@ -34,18 +35,19 @@ import eu.hansolo.tilesfx.TileBuilder;
 import eu.hansolo.tilesfx.colors.Bright;
 import eu.hansolo.tilesfx.colors.Dark;
 import extrafont.Myfont;
+import gnu.io.SerialPortEvent;
+import gnu.io.SerialPortEventListener;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.embed.swing.SwingFXUtils;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.LineChart.SortingPolicy;
 import javafx.scene.chart.NumberAxis;
@@ -54,8 +56,8 @@ import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -63,25 +65,19 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.transform.Transform;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import javafx.stage.Popup;
-import myconstant.Myconstant;
 import toast.MyDialoug;
 import toast.Toast;
 
 public class NLivetestController implements Initializable {
 
-	@FXML
-	StackPane videoanc;
+	int pressureindex = 0;
 
 	@FXML
 	ScrollPane scrollrecord;
@@ -95,6 +91,9 @@ public class NLivetestController implements Initializable {
 	@FXML
 	Label lblfilename, lblbpc;
 
+	double stepsizepercentage = 0.2, maxpressureinstepsize = 1, mindelay = 200, maxdelay = 2000, minavg = 2,
+			maxavg = 12;
+
 	@FXML
 	Rectangle manualblock;
 
@@ -107,6 +106,7 @@ public class NLivetestController implements Initializable {
 
 	int stadycount = 0;
 
+	ListChangeListener<Double> bubblelistener1;
 	int skip, skipwet = 0, skipdry = 0;
 	MyDialoug mydia;
 // for start popup
@@ -120,12 +120,17 @@ public class NLivetestController implements Initializable {
 	AudioClip tones;
 
 	@FXML
-	private Button btninfo, btnabr, btnfail, starttest, starttestwet, startautotest, recordbtn;
+	private Button btninfo, btnabr, starttest, btnfail, btnpass, recordbtn;
+
+	int delayinauto = 2500;
 
 	boolean iswaiting = false;
 
 	@FXML
 	Label lbltestnom, lbltestdurationm, status, lblcurranttest;
+
+	public static JFXDialog df;
+	public static JFXDialog df1;
 
 	@FXML
 	AnchorPane guages, ancregu1, ancregu2, ancpg1, ancpg2, ancpg3, ancpg4;
@@ -134,6 +139,11 @@ public class NLivetestController implements Initializable {
 	AnchorPane root, mainroot;
 
 	private Tile gauge5;
+	
+	double highPressure=0;
+
+	@FXML
+	ToggleButton chamberonoff;
 
 	int countbp = 0;
 	writeFormat wrd;
@@ -145,19 +155,29 @@ public class NLivetestController implements Initializable {
 	long t1test, t2test;
 	boolean once = true;
 	int yi = 0;
-
+	static double p_inc = 0.0;
+	int data_length = 0;
+	double flowint = 0;
 	final NumberAxis xAxis = new NumberAxis();
 	final NumberAxis yAxis = new NumberAxis();
 
 	LineChart<Number, Number> sc = new LineChart<>(xAxis, yAxis);
 	XYChart.Series series2 = new XYChart.Series();
 
-	int testno = 1;
-	String ip = "http://192.168.0.109:8080/action";
+	private static final int DATA_POINT_POPUP_WIDTH = 30;
+	private static final int DATA_POINT_POPUP_HEIGHT = 15;
+	private static final int RGB_MAX = 255;
+
+	private Notifier notifier;
+
+	int testno = 1, trails;
 
 	Myfont f = new Myfont(22);
 
-	
+	double calculationdia = 0;
+	double conditionflow, conditionpressure;
+
+	double darcyavg = 0;
 
 	double curpress = 0;
 
@@ -171,6 +191,7 @@ public class NLivetestController implements Initializable {
 	long tempt1;
 
 	int testtype = 0; // 0 for bubble 1 for wet 2 for dry
+	SerialReader in;
 
 	static SimpleBooleanProperty isSkiptest;
 
@@ -181,141 +202,142 @@ public class NLivetestController implements Initializable {
 
 	long changetime = 0;
 
-	Thread mainth;
+	int stepsize;
+	double dropPer;
+	double  initialPR, endPressure, incrementPR,fillingPr;
 
-	boolean isreading = false;
+	int lastPrCount = 0;
+	int incrementPrCount = 0;
 
-	long waittime = 0;
+	int avgCount = 0;
+	double pgOffset = 0;
+	boolean inilizedPressure = true;
 
-	int maxpsi = 50000;
-	double conditionpressure=50000;
-	void setMode() {
+	int prCheck = 1;
+	double prx, pry, prn = 1;
+	
+	boolean firstObserv=false;
 
-		System.out.println("TH type : " + Myconstant.testmode);
+	void setInitialData() {
+		stepsize = Integer.parseInt(MyContants.stepsize) * 1000;
+		dropPer = Double.parseDouble(MyContants.getDropN());
+     	initialPR = Double.parseDouble(MyContants.getInitprN());
+		endPressure = Double.parseDouble(MyContants.maxpressure);
 
-		waittime = Integer.parseInt(Myconstant.stepsize);
+		prx = Double.parseDouble(MyContants.getX());
+		prn = 1;
+		pry = Double.parseDouble(MyContants.getY());
+		fillingPr=Double.parseDouble(MyContants.getFillingPressureN());
+                            
+		inilizedPressure = true;
 
-		waittime=waittime*1000;
-		System.out.println("step time : " + waittime);
+		System.out.println("Mode : "+MyContants.smode);
+		System.out.println("\n\n\nStep Size : " + stepsize);
+		System.out.println("dropPer : " + dropPer);
+		System.out.println("initialPR : " + initialPR);
+		System.out.println("endPressure : " + endPressure);
+		System.out.println("PRX : " + prx);
+		System.out.println("PRN : " + prn);
+		System.out.println("PRY : " + pry);
+		System.out.println("Filling pr : "+fillingPr);
+
 	}
 
-// stop test function it is used when test is completed or in while
-// running...
+	void setBubblePoints(double pr) {
 
-	void startReading() {
-		isreading = true;
-		Webservices ws = new Webservices();
-		ws.setUrl(ip + "/?cmd=start");
-		ws.connect();
-		String data = ws.getData();
-		System.out.println("Start cmd : "+data);
-		if (mainth == null) {
-			mainth = new Thread(new Runnable() {
+		if (pr > 0.1) {
+			
+			if(highPressure<pr)
+			{
+				highPressure=pr;
+			}
+			
+			
+			if(tlist.size()==0)
+			{
+				tempt1 = System.currentTimeMillis();
+			}
+			
+			readpre = pr;
+			readtime = getTime();
+
+			bans.add("" + pr);
+			tlist.add("" + readtime);
+
+			Platform.runLater(new Runnable() {
 
 				@Override
 				public void run() {
 
-					while (isreading) {
-						try {
-							ws.setUrl(ip + "/");
-							ws.connect();
+					series2.getData().add(new XYChart.Data(readtime, pr));
+					series2.getData().add(new XYChart.Data(readtime, DataStore.ConvertPressure(pr)));
 
-							String data = ws.getData();
-							System.out.println("Data : "+data);
-							if (data.equals("nc")) {
-
-								changeStatusLable("Hardware connection problem! Restart test.");
-							//	isreading = false;
-							//	MyDialoug.showError(102);
-							} else {
-
-								
-								String[] all=data.split(",");
-								Map<String,Object> rec=new HashMap<>();
-								for(int i=0;i<all.length;i++)
-								{
-									String[] temp=all[i].split(":");
-									try {
-									rec.put(temp[0],temp[1]);
-									}
-									catch(Exception e)
-									{
-										System.out.println("Error :  "+temp[0]);
-									}
-								}
-									
-								
-								// 26385
-							
-								double pr=Double.parseDouble(rec.get("pvalue").toString());
-							
-								
-								
-								int maxpre = Integer.parseInt(DataStore.getPg1());
-								pr = (double) pr * maxpre / 26390;
-
-								if (DataStore.getUnitepg1().equals("bar")) {
-								pr = DataStore.barToPsi(pr);
-								} else if (DataStore.getUnitepg1().equals("torr")) {
-								pr = DataStore.torrToPsi(pr);
-								}
-
-								// System.out.println("Pr original : " + pr);
-								if (DataStore.isabsolutepg1()) {
-								pr = pr - 14.6;
-								if (pr < 0) {
-								pr = 0;
-								}
-								}
-
-
-								
-								
-								
-								DataStore.livepressure.set(pr);
-								setBubblePoints(pr);
-
-							}
-
-							Thread.sleep(waittime);
-
-						} catch (Exception e) {
-
-							e.printStackTrace();
-							mainth.stop();
-							isreading = false;
-							changeStatusLable("something went wrong! please Restart test");
-						}
-					}
 				}
 			});
-		}
-		mainth.start();
 
-	}
-
-	void changeStatusLable(String msg) {
-		Platform.runLater(new Runnable() {
-
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				status.setText(msg);
+			if (pr > 0.3 && inilizedPressure) {
+				inilizedPressure = false;
+				double per = (double) initialPR * 100 / Integer.parseInt(DataStore.getPr());
+				int max = 65535;
+				double prCount = (double) per * max / 100;
+				lastPrCount = (int) prCount;
+				print("PR Count :" + prCount + "\nPr : " + initialPR);
+				Mycommand.setDACValue('1', lastPrCount, 500);
 			}
-		});
+
+			if (pr > prCheck) {
+
+				
+				double increment =(MyContants.smode=="mode2"?prx + (prn * pry):prx);
+				print("Increment \nPrx: " + prx + "pry: " + pry + " prn: " + prn + "\nAnswer : " + increment);
+				double per = (double) increment * 100 / Integer.parseInt(DataStore.getPr());
+				int max = 65535;
+				double prCount = (double) per * max / 100;
+
+				print("Increment Count :" + prCount);
+
+				lastPrCount = lastPrCount + (int) prCount;
+				print("total PR count : " + lastPrCount);
+				Mycommand.setDACValue('1', lastPrCount, 200);
+
+				prn++;
+				prCheck++;
+
+			}
+
+			if (curpress != 0) {
+				double per = dropPer;
+				double diff = (double) curpress * per / 100;
+
+				System.out.println("Last Pr : " + curpress);
+				System.out.println("Current  : " + pr);
+
+				System.out.println("Diff : " + (curpress - diff));
+				if (pr < (curpress - diff)) {
+					print("Drop fetch");
+				    isCompletetest = true;
+				}
+			}
+
+			if (pr > endPressure || isCompletetest) {
+				completeTest();
+				Platform.runLater(new Runnable() {
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+
+						starttest.setDisable(false);
+					}
+				});
+			}
+
+			curpress = pr;
+		}
+
 	}
 
-	void stopTest1() {
-
-		sendStopCmd();
-		recorddata.clear();
-		recordtime.clear();
-		starttest.setDisable(false);
-		status.setText("Test hase been Stop");
-		bans.clear();
-		isCompletetest = false;
-
-	}
+	
 
 // set all shortcut
 	void addShortCut() {
@@ -346,12 +368,9 @@ public class NLivetestController implements Initializable {
 			recorddata.add(readpre);
 			recordtime.add(readtime);
 			generateList();
-			
-			if(recorddata.size()==3)
-			{
+			if (recorddata.size() > 2) {
 				completeTest();
 			}
-			
 		} else {
 			Toast.makeText(Main.mainstage, "Already exist", 500, 100, 100);
 		}
@@ -403,109 +422,88 @@ public class NLivetestController implements Initializable {
 		scrollrecord.setContent(v);
 	}
 
-	void loadVideo() {
+	
+	void changeStatus(String msg)
+	{
 		Platform.runLater(new Runnable() {
-
+			
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-
-				WebView video;
-				WebEngine engine;
-				video = new WebView();
-				engine = video.getEngine();
-
-				engine.load("http://192.168.0.108:5000/video_feed");
-				// engine.load( getClass().getResource("index.html").toString() );
-
-				video.setZoom(0.75);
-
-//				String path = "https://firebasestorage.googleapis.com/v0/b/fir-db2-4135f.appspot.com/o/php%2Fzoom_2.mp4?alt=media&token=3e044914-485a-4187-8b3f-2806c5a3aab1";
-//				
-//				
-//				path="http://192.168.0.108:8082/index.html";
-//				    Media media = new Media(path);
-//				    MediaPlayer mediaPlayer = new MediaPlayer(media);
-//				    MediaView video =new MediaView(mediaPlayer);
-//				 //   mediaPlayer.play();
-//				    mediaPlayer.setAutoPlay(true);
-//				
-
-				System.out.println("Done");
-				video.maxHeight(videoanc.getPrefHeight());
-				video.minHeight(videoanc.getPrefHeight());
-				video.prefHeight(videoanc.getPrefHeight());
-
-				video.maxWidth(videoanc.getPrefWidth());
-				video.minWidth(videoanc.getPrefWidth());
-				video.prefWidth(videoanc.getPrefWidth());
-
-				videoanc.getChildren().add(video);
-
+				status.setText(msg);
+				Toast.makeText(Main.mainstage, msg, 1500, 100, 100);
 			}
 		});
-
 	}
-
-	void savePic(StackPane n) {
-
-		double pixelScale = 2.0;
-
-		WritableImage writableImage = new WritableImage((int) Math.rint(pixelScale * n.getPrefWidth()),
-				(int) Math.rint(pixelScale * n.getPrefHeight()));
-		SnapshotParameters spa = new SnapshotParameters();
-		spa.setTransform(Transform.scale(pixelScale, pixelScale));
-		WritableImage image = n.snapshot(spa, writableImage);
-		// WritableImage image = lineChart.snapshot(new SnapshotParameters(), null);
-
-		File newfile = new File("mypic/snap.png");
-
-		System.out.println("ImageWriting is Starting");
-		try {
-			ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", newfile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println("Image writing is done");
-	}
-
+	
+	
 // set hardware connection status.. and if it connected then create
 // communication bridge with it.
 	void connectHardware() {
+		Myapp.testtrial = "4";
+		in = new SerialReader(DataStore.in);
 
-		// status.setText("Hardware Problem");
-		// MyDialoug.showError(102);
-		// status.setText("Hardware Connected");
-		setTimer();
+		try {
+			DataStore.serialPort.removeEventListener();
+			DataStore.serialPort.addEventListener(in);
+			DataStore.serialPort.notifyOnDataAvailable(true);
+			setTimer();
+			status.setText("Hardware Connected");
+
+		} catch (TooManyListenersException e) {
+
+			MyDialoug.showError(102);
+			status.setText("Hardware Problem");
+		} catch (Exception e) {
+			Platform.runLater(new Runnable() {
+
+				@Override
+				public void run() {
+// TODO Auto-generated method stub
+
+					status.setText("Hardware Problem");
+					MyDialoug.showError(102);
+
+				}
+			});
+
+		}
 
 	}
 
+// setting all functionality and sequence.
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+// TODO Auto-generated method stub
 
-		// loadVideo();
+		setInitialData();
 
-		Myapp.PrintAll();
+		// Myapp.PrintAll();
 		isSkiptest = new SimpleBooleanProperty(false);
 		btnfail.setDisable(false);
 		tones = new AudioClip(NLivetestController.class.getResource("stoptone.mp3").toString());
+		chamberonoff.setVisible(false);
 
 		addShortCut();
 
 		isRestart = new SimpleBooleanProperty(false);
+		isSkiptest.set(false);
+		Myapp.testtrial = "4";
+		trails = Integer.parseInt(Myapp.testtrial);
 
 		DataStore.getconfigdata();
+		conditionflow = (double) Double.parseDouble(DataStore.getFc());
+		// conditionpressure = Double.parseDouble(Myapp.endpress);
 
 		recorddata = new ArrayList<Double>();
 		recordtime = new ArrayList<Double>();
 		isBubbleStart = new SimpleBooleanProperty(false);
 		isDryStart = new SimpleBooleanProperty(false);
-		lblfilename.setText(Myconstant.sampleid);
-
-		setMode();
+		lblfilename.setText(MyContants.sampleid);
 
 		lbltesttype.setText("Hydrostatic Pressure Test");
-		lbltesttype.setText("AATCC 127");
+		lbltesttype.setText("EN 20811");
 
 		connectHardware();
 		setButtons();
@@ -529,9 +527,8 @@ public class NLivetestController implements Initializable {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-// TODO Auto-generated method stub
+
 				recordPressure();
-				// savePic(videoanc);
 
 			}
 		});
@@ -547,6 +544,31 @@ public class NLivetestController implements Initializable {
 
 			}
 		});
+
+// setTableList();
+
+		bans = new ArrayList<>();
+
+		tlist = new ArrayList<>();
+
+		isRestart.addListener(new ChangeListener<Boolean>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				restartTest();
+			}
+		});
+
+		btnpass.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+
+				result = "Pass";
+				completeTest();
+			}
+		});
+
 		btnfail.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -560,31 +582,6 @@ public class NLivetestController implements Initializable {
 			}
 		});
 
-// setTableList();
-
-		bans = new ArrayList<>();
-		tlist = new ArrayList<>();
-
-		startautotest.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent arg0) {
-
-				isRestart.set(false);
-				mydia = new MyDialoug(Main.mainstage, "/userinput/Re-testpopup.fxml");
-				mydia.showDialoug();
-
-			}
-		});
-
-		isRestart.addListener(new ChangeListener<Boolean>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				restartTest();
-			}
-		});
-
 	}
 
 	void restartTest() {
@@ -594,7 +591,7 @@ public class NLivetestController implements Initializable {
 			public void run() {
 
 				status.setText("Restarting test...");
-				sendStopCmd();
+				// stopTest();
 				showBubblePopup();
 
 			}
@@ -603,7 +600,8 @@ public class NLivetestController implements Initializable {
 
 	void bubbleClicknew() {
 		btnfail.setDisable(false);
-		status.setText("Hydrostatic test is runnig..");
+		changeStatus("Test inilizing .... !");
+	//	status.setText("Hydrostatic test is running..");
 		lblcurranttest.setText("Pressure vs Time");
 
 		flowserireswet.getData().clear();
@@ -611,17 +609,22 @@ public class NLivetestController implements Initializable {
 
 		bans.clear();
 		tlist.clear();
+		
+		highPressure=0;
+
+		avgCount = 0;
+		pgOffset = 0;
 
 		skip = 0;
 		yAxis.setLabel("Pressure (" + DataStore.getUnitepressure() + ")");
 		xAxis.setLabel("Time (Seconds)");
 
-		tempt1 = System.currentTimeMillis();
+		
 
 		starttest.setDisable(true);
 
 		countbp = 0;
-// starttest.setVisible(false);
+		// starttest.setVisible(false);
 
 		t2test = System.currentTimeMillis();
 		// series1.getData().clear();
@@ -632,16 +635,86 @@ public class NLivetestController implements Initializable {
 		// conditionpressure));
 		changetime = System.currentTimeMillis();
 
-		startReading();
+		firstObserv=true;
+		Toast.makeText(Main.mainstage, "Test is being started!", 2400, 200, 200);
+		new Thread(new Runnable() {
 
-		// Toast.makeText(Main.mainstage, "Test is being started!", 2400, 200, 200);
+			@Override
+			public void run() {
+// TODO Auto-generated method stub
+
+				int minde = 540;
+// Mycommand.setDACValue('1', 0, 0);
+// try {
+//
+// Thread.sleep(minde);
+// } catch (Exception e) {
+//
+// }
+
+//				Mycommand.setDelay(stepsize, 0);
+//				try {
+//
+//					Thread.sleep(minde);
+//				} catch (Exception e) {
+//
+//				}
+				Mycommand.setStability(2, 5, 0);
+				try {
+
+					Thread.sleep(minde);
+				} catch (Exception e) {
+
+				}
+
+				Mycommand.sendAdcEnableBits("101", 0);
+				try {
+
+					Thread.sleep(minde);
+				} catch (Exception e) {
+
+				}
+
+				Mycommand.valveOff('1', 0);
+				try {
+
+					Thread.sleep(minde);
+				} catch (Exception e) {
+
+				}
+
+				Mycommand.valveOff('2', 0);
+				try {
+
+					Thread.sleep(minde);
+				} catch (Exception e) {
+
+				}
+
+				Mycommand.valveOff('3', 0);
+				try {
+					Thread.sleep(minde);
+				} catch (Exception e) {
+
+				}
+
+				testtype = 0;
+
+				startReading();
+
+			}
+		}).start();
 
 	}
 
-// get differencial time
-
 	double getTime() {
 		double an = (double) ((System.currentTimeMillis() - tempt1) / 1000);
+		return an;
+	}
+
+	double getTimeforwait() {
+		double an = (double) ((System.currentTimeMillis() - changetime) / 1000);
+		System.out.println("time : " + an);
 		return an;
 	}
 
@@ -687,6 +760,31 @@ public class NLivetestController implements Initializable {
 		}
 	}
 
+	List<Integer> getAdcData(List<Integer> data) {
+		List<Integer> d = new ArrayList<Integer>();
+
+		// System.out.println("READ .... ");
+		for (int i = 4; i < 49; i = i + 3) {
+			d.add(getIntFromBit(data.get(i), data.get(i + 1), data.get(i + 2)));
+
+		}
+		// System.out.println("READ DONE ..." + d.size());
+		// System.out.println("Adc Data :" + d);
+		return d;
+	}
+
+	int getIntFromBit(int a1, int a2, int a3) {
+		// System.out.println(a1 + " : " + a2 + ": " + a3);
+		int a = 0;
+
+		a = a1 << 16;
+		a2 = a2 << 8;
+		a = a | a2;
+		a = a | a3;
+
+		return a;
+	}
+
 	int findInt1(String[] s) {
 		try {
 			Date d1 = new Date();
@@ -722,6 +820,14 @@ public class NLivetestController implements Initializable {
 // set round off all points
 	public String getRound(Double r, int round) {
 
+		/*
+		 * if (round == 2) { r = (double) Math.round(r * 100) / 100; } else if (round ==
+		 * 3) { r = (double) Math.round(r * 1000) / 1000;
+		 *
+		 * } else { r = (double) Math.round(r * 10000) / 10000;
+		 *
+		 * }
+		 */
 		r = (double) Math.round(r * 100) / 100;
 
 		return r + "";
@@ -731,6 +837,7 @@ public class NLivetestController implements Initializable {
 // set main graphs....
 	void setGraph() {
 		root.getChildren().add(sc);
+		DataStore.pressure_max = Integer.parseInt(MyContants.maxpressure);
 		sc.setAxisSortingPolicy(SortingPolicy.Y_AXIS.NONE);
 		sc.setAxisSortingPolicy(SortingPolicy.X_AXIS.NONE);
 
@@ -747,6 +854,8 @@ public class NLivetestController implements Initializable {
 
 		sc.prefWidthProperty().bind(root.widthProperty());
 		sc.prefHeightProperty().bind(root.heightProperty());
+
+		trails = Integer.parseInt(Myapp.testtrial);
 
 		// xAxis.setUpperBound(conditionpressure);
 		xAxis.setAutoRanging(true);
@@ -770,7 +879,7 @@ public class NLivetestController implements Initializable {
 						new Stop(0.7, Bright.ORANGE_RED), new Stop(0.8, Bright.RED), new Stop(1.0, Dark.RED))
 				.strokeWithGradient(true).animated(true).build();
 
-		gauge5.setMaxValue(DataStore.ConvertPressure(conditionpressure));
+		gauge5.setMaxValue(endPressure);
 		gauge5.prefHeight(guages.getPrefHeight());
 		gauge5.prefWidth(guages.getPrefWidth());
 		gauge5.maxHeight(guages.getPrefHeight());
@@ -825,7 +934,6 @@ public class NLivetestController implements Initializable {
 	void setButtons() {
 		btninfo.getStyleClass().add("transperant_comm");
 		btnabr.getStyleClass().add("transperant_comm");
-		startautotest.getStyleClass().add("transperant_comm");
 		btnfail.getStyleClass().add("transperant_comm");
 
 		btninfo.setOnAction(new EventHandler<ActionEvent>() {
@@ -867,6 +975,7 @@ public class NLivetestController implements Initializable {
 
 	}
 
+// set points on mouse over event
 	private void setDataPointPopup(XYChart<Number, Number> sc) {
 		final Popup popup = new Popup();
 		popup.setHeight(20);
@@ -921,6 +1030,29 @@ public class NLivetestController implements Initializable {
 
 	}
 
+// data send to MCU
+	public void sendData(writeFormat w) {
+		System.out.println("Sending Data......");
+		w.showData();
+		Thread t = new Thread(new SerialWriter(DataStore.out, w));
+		t.start();
+
+	}
+
+// send data to MCU after some delay
+	void sendData(writeFormat w, int slp) {
+		System.out.println("Sending Data......");
+		w.showData();
+		Thread t = new Thread(new SerialWriter(DataStore.out, w, slp));
+		try {
+
+			t.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
 // set value to ascii and package
 	public static List<Integer> getValueList(int val) {
 		String pad = "000000";
@@ -938,86 +1070,215 @@ public class NLivetestController implements Initializable {
 		return ls;
 	}
 
-	void setBubblePoints(double pr) {
+// set all incomming packet event...
+	public class SerialReader implements SerialPortEventListener {
 
-		readpre = pr;
-		readtime = getTime();
+		InputStream in;
+		int ind = 0;
+		List<Integer> readData = new ArrayList<Integer>();
 
-		bans.add("" + pr);
-		tlist.add("" + readtime);
+		public SerialReader(InputStream in) {
+			this.in = in;
+			DataStore.getconfigdata();
+		}
 
-		Platform.runLater(new Runnable() {
+		public void serialEvent(SerialPortEvent arg0) {
+			int data;
+			try {
+				int len = 0;
+				char prev = '\0';
+// System.out.println("Reading Started:");
 
-			@Override
-			public void run() {
+				while ((data = in.read()) > -1) {
 
-				series2.getData().add(new XYChart.Data(readtime, DataStore.ConvertPressure(pr)));
+					if (data == '\n' && prev == 'E') {
+						break;
+					}
+					if (len > 0 || (data == '\r' && prev == '\n')) {
+						readData.add(data);
 
-			}
-		});
+						len++;
+					}
+					prev = (char) data;
+					// System.out.print(prev);
 
-		/*
-		if (pr <= maxpsi) {
-
-			if (pr > curpress) {
-				curpress = pr;
-				stadycount = 0;
-			} else {
-				if (pr > 0.2) {
-					stadycount++;
+// System.out.print(new String(buffer,0,len));
 				}
-				if (pr > 0.4) {
 
-					int per = 10;
-					double diff = (double) curpress * per / 100;
+				for (int i = 1; i < readData.size(); i++) {
 
-					System.out.println("High : " + curpress);
-					System.out.println("Current  : " + pr);
+					if (readData.get(i) == 'F' && readData.get(i + 1) == (int) 'M'
+							&& readData.get(i + 2) == (int) 'A') {
+						double pr = 0, fl = 0;
+						List<Integer> reading = getAdcData(readData);
 
-					System.out.println("Diff : " + (curpress - diff));
-					if (pr < (curpress - diff)) {
-						isCompletetest = true;
+						int maxpre = Integer.parseInt(DataStore.getPg1());
+						pr = (double) reading.get(2) * maxpre / 65535;
+
+						if (DataStore.getUnitepg1().equals("bar")) {
+							pr = DataStore.barToPsi(pr);
+						} else if (DataStore.getUnitepg1().equals("torr")) {
+							pr = DataStore.torrToPsi(pr);
+						}
+
+						// System.out.println("Pr original : " + pr);
+						if (DataStore.isabsolutepg1()) {
+							pr = pr - 14.6;
+							if (pr < 0) {
+								pr = 0;
+							}
+						}
+
+						// System.out.println("Pr after update: " + pr);
+
+						// System.out.println("" + reading);
+
+						// System.out.println("Pr : " + pr);
+
+						if (testtype == 0) {
+							observeFill(reading.get(0));
+						} else if (testtype == 1) {
+							print("pr adding for avg : " + pr);
+							avgPressure(pr);
+						} else if (testtype == 2) {
+							double newpr = (pr - pgOffset);
+							System.out.println("Original Pg : " + pr + "\nAfter Offset removal : ");
+							DataStore.livepressure.set(newpr);
+							setBubblePoints(newpr < 0 ? 0 : newpr);
+						}
 					}
 
+					readData.clear();
+					break;
+
 				}
 
-				if (stadycount == 5) {
-					isCompletetest = true;
-				}
-			}
+			} catch (IOException e) {
+				DataStore.serialPort.removeEventListener();
+				MyDialoug.showErrorHome(103);
 
-			if (pr > conditionpressure || isCompletetest) {
-				
 				Platform.runLater(new Runnable() {
 
 					@Override
 					public void run() {
-						// TODO Auto-generated method stub
-						completeTest();
-						starttest.setDisable(false);
+// TODO Auto-generated method stub
+						status.setText("Connection has been lost");
 					}
 				});
-			}
-		}else
-		{
-			Platform.runLater(new Runnable() {
+				System.out.println("Live screen error :" + e.getMessage());
 
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					completeTest();
-					starttest.setDisable(false);
-				}
-			});
+			}
+
 		}
-		*/
 
 	}
 
+	void observeFill(int count) {
+
+		System.out.println("Observ count : " + count);
+		
+		if(firstObserv && count< 25000)
+		{
+			
+			firstObserv=false;
+			Mycommand.valveOn('3', 300);
+		}
+		
+		
+		if (count > 25000 && count < 60000) {
+
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+
+					Mycommand.valveOff('3', 0);
+					Mycommand.valveOn('1', 600);
+					
+					Mycommand.valveOn('2', 1200);
+					
+					Mycommand.valveOff('2', 2500);
+					
+
+					testtype = 1;
+				}
+			}).start();
+
+		}
+
+	}
+
+	void startReading() {
+		Mycommand.startADC(0);
+
+	}
+
+	void stopReading() {
+		Mycommand.stopADC(0);
+	}
+
+	void avgPressure(double pr) {
+
+		pgOffset += pr;
+		avgCount++;
+
+		if (avgCount >= 5) {
+			new Thread(new Runnable() {
+				public void run() {
+
+					pgOffset = pgOffset / avgCount;
+					System.out.println("Pg Offset  : " + pgOffset);
+
+					stopReading();
+					testtype = 2;
+
+					double per = (double) fillingPr * 100 / Integer.parseInt(DataStore.getPr());
+					int max = 65535;
+					double prCount = (double) per * max / 100;
+					int prCountint = (int) prCount;
+					print("PR Count :" + prCount + "\nPr : " + prCountint);
+
+//					double per1 =(double)incrementPR*100/ 130;
+//					System.out.println("per1  :  "+per1);
+//					int max1=65535;
+//					double prCount1=(double)per1*max1/100;
+//					incrementPrCount=(int)prCount1;
+//					print("Increment PR Count :"+incrementPrCount+"\nIncrement Pr : "+incrementPR);
+//					
+					
+
+					Mycommand.setDACValue('1', prCountint, 500);
+					setDelay(1200);
+					startReading();
+
+					
+					changeStatus("Test starting ....");
+					
+				}
+			}).start();
+
+		}
+
+	}
+
+	void setDelay(int delay) {
+		try {
+			Thread.sleep(delay);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	
+	void print(String msg) {
+		System.out.println(msg);
+	}
+
 	void completeTest() {
-		isreading = false;
-		createCsvTableBubble();
+		testtype = 5;
+		
 		sendStopCmd();
+		createCsvTableBubble();
 
 	}
 
@@ -1044,7 +1305,7 @@ public class NLivetestController implements Initializable {
 					fffff.mkdir();
 				}
 
-				File f = new File(fffff.getPath() + "/" + Myconstant.sampleid);
+				File f = new File(fffff.getPath() + "/" + MyContants.sampleid);
 				if (!f.isDirectory()) {
 					f.mkdir();
 					System.out.println("Dir csv folder created");
@@ -1054,55 +1315,31 @@ public class NLivetestController implements Initializable {
 
 				CalculatePorometerData c = new CalculatePorometerData();
 
-				cs.wtirefile(f.getPath() + "/" + Myconstant.sampleid + "_" + findInt(ff) + ".csv");
-			
-				String msg="";
-				double level2=0.284;
-				double level3=0.711;
+				cs.wtirefile(f.getPath() + "/" + MyContants.sampleid + "_" + findInt(ff) + ".csv");
+				double bpress;
+				if (recorddata.size() > 2) {
+					result = "FAIL";
+					bpress=recorddata.get(2);
+				} else {
+
+					result = "PASS";
+					bpress=highPressure;
+
+				}
+				
+				
 
 				cs.firstLine("hydrostatic");
 				cs.newLine("testname", "hydrostatic");
-				if(recorddata.size()>=3)
-				{
-					if(recorddata.get(2)>=level3)
-					{
-						result="pass";
-						msg="AAMI PB:70 Level 3";
-					}
-					else if(recorddata.get(2)>=level2)
-					{
-						result="pass";
-						msg="AAMI PB:70 Level 2";
-					}
-					else
-					{
-						result="fail";
-						msg="AAMI PB:70 Level 3";
-					}
-					
-
-					cs.newLine("bpressure", "" + recorddata.get(2));
-				}
-				else
-				{
-					result="pass";
-					msg="AAMI PB:70 Level 3";
-
-					cs.newLine("bpressure", "" + curpress);
-				}
-				
-				
-				
-
 				cs.newLine("result", result);
-				cs.newLine("resultmsg",msg);
-				cs.newLine("sample", Myconstant.sampleid);
+				cs.newLine("bpressure", ""+bpress);
+				cs.newLine("sample", MyContants.sampleid);
+				cs.newLine("fluidname", Myapp.fluidname);
+				cs.newLine("fluidvalue", Myapp.fluidvalue);
+				cs.newLine("mode", "" + Myapp.thresold);
 				cs.newLineDouble("recordy", recorddata);
 				cs.newLineDouble("recordx", recordtime);
-				cs.newLine("stepsize",Myconstant.stepsize);
-				cs.newLine("lotno",Myconstant.lotno);
-				cs.newLine("side",Myconstant.samplearea);
-				
+
 				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 				DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
@@ -1124,13 +1361,11 @@ public class NLivetestController implements Initializable {
 				cs.newLine("durationsecond", s + "");
 				cs.newLine("testtime", timeFormat.format(date));
 				cs.newLine("testdate", dateFormat.format(date));
-				cs.newLine("testmode",Myconstant.testmode);
-				cs.newLine("rate",Myconstant.pressurerate);
-			//	cs.newLine("customerid", Myapp.uid);
+				cs.newLine("customerid", Myapp.uid);
 
-			//	cs.newLine("indistry", Myapp.indtype);
-			//	cs.newLine("application", Myapp.materialapp);
-			//	cs.newLine("splate", Myapp.splate);
+				cs.newLine("indistry", Myapp.indtype);
+				cs.newLine("application", Myapp.materialapp);
+				cs.newLine("splate", Myapp.splate);
 
 				cs.newLine("ans", bans);
 				cs.newLine("t", tlist);
@@ -1142,8 +1377,7 @@ public class NLivetestController implements Initializable {
 
 					@Override
 					public void run() {
-// TODO Auto-generated method stub
-
+						
 						showResultPopup();
 					}
 				});
@@ -1159,7 +1393,7 @@ public class NLivetestController implements Initializable {
 				@Override
 				public void run() {
 					status.setText("Please Re-test this sample");
-
+					btnfail.setDisable(true);
 					Toast.makeText(Main.mainstage, "No Data found for test", 1000, 100, 100);
 				}
 			});
@@ -1188,27 +1422,13 @@ public class NLivetestController implements Initializable {
 // send stop protocol to MCU
 	void sendStopCmd() {
 
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				isreading = false;
-
-				Webservices ws = new Webservices();
-				ws.setUrl(ip + "/?cmd=stop");
-				ws.connect();
-				try {
-				mainth.stop();
-				mainth = null;
-				}
-				catch(Exception e)
-				{
-					
-				}
-			}
-		}).start();
-	
+		Mycommand.stopADC(0);
+		Mycommand.setDACValue('1', 0, 500);
+		Mycommand.valveOn('1', 950);
+		Mycommand.valveOn('2', 1500);
+		Mycommand.valveOff('2', 2500);
+		Mycommand.valveOff('1', 3100);
+		changeStatus("Test End");
 	}
 
 }

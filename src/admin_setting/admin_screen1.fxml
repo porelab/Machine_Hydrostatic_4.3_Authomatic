@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.*?>
 <?import com.jfoenix.controls.*?>
 <?import javafx.scene.shape.*?>
@@ -204,7 +205,7 @@
             <Font size="25.0" />
          </font>
       </Label>
-      <Button fx:id="btnapply" layoutX="587.0" layoutY="466.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="223.0" style="-fx-background-radius: 50;" styleClass="linear-grad-to-bottom-right" text="Apply" textFill="WHITE">
+      <Button fx:id="btnapply" layoutX="269.0" layoutY="448.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="223.0" style="-fx-background-radius: 50;" styleClass="linear-grad-to-bottom-right" text="Apply" textFill="WHITE">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
@@ -212,5 +213,91 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
+      <Rectangle arcHeight="500.0" arcWidth="55.0" fill="#2197ff00" height="60.0" layoutX="1013.0" layoutY="136.0" stroke="#bfb9b9" strokeType="INSIDE" strokeWidth="2.0" width="285.0" />
+      <TextField fx:id="txtincrrate" layoutX="1016.0" layoutY="139.0" prefHeight="57.0" prefWidth="280.0" promptText="Enter Incremental Rate">
+         <font>
+            <Font size="21.0" />
+         </font>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <styleClass>
+            <String fx:value="uinputtextbox" />
+            <String fx:value="col-gray70" />
+         </styleClass>
+      </TextField>
+      <Rectangle arcHeight="500.0" arcWidth="55.0" fill="#2197ff00" height="60.0" layoutX="1014.0" layoutY="209.0" stroke="#bfb9b9" strokeType="INSIDE" strokeWidth="2.0" width="285.0" />
+      <TextField fx:id="initpr" layoutX="1017.0" layoutY="212.0" prefHeight="57.0" prefWidth="280.0" promptText="Initial PR">
+         <font>
+            <Font size="21.0" />
+         </font>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <styleClass>
+            <String fx:value="uinputtextbox" />
+            <String fx:value="col-gray70" />
+         </styleClass>
+      </TextField>
+      <Rectangle arcHeight="500.0" arcWidth="55.0" fill="#2197ff00" height="60.0" layoutX="1013.0" layoutY="282.0" stroke="#bfb9b9" strokeType="INSIDE" strokeWidth="2.0" width="285.0" />
+      <TextField fx:id="incrpr" layoutX="1016.0" layoutY="285.0" prefHeight="57.0" prefWidth="280.0" promptText="Increse PR">
+         <font>
+            <Font size="21.0" />
+         </font>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <styleClass>
+            <String fx:value="uinputtextbox" />
+            <String fx:value="col-gray70" />
+         </styleClass>
+      </TextField>
+      <Rectangle arcHeight="500.0" arcWidth="55.0" fill="#2197ff00" height="60.0" layoutX="1014.0" layoutY="355.0" stroke="#bfb9b9" strokeType="INSIDE" strokeWidth="2.0" width="285.0" />
+      <TextField fx:id="delp" layoutX="1017.0" layoutY="358.0" prefHeight="57.0" prefWidth="280.0" promptText="ΔP - Check Point">
+         <font>
+            <Font size="21.0" />
+         </font>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <styleClass>
+            <String fx:value="uinputtextbox" />
+            <String fx:value="col-gray70" />
+         </styleClass>
+      </TextField>
+      <Button fx:id="btnsettingsave" layoutX="918.0" layoutY="456.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="223.0" style="-fx-background-radius: 50;" styleClass="linear-grad-to-bottom-right" text="Save &amp; Apply" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Label layoutX="952.0" layoutY="62.0" text="Test Setting" textFill="#0e3c87">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+      <Line endX="250.0" layoutX="697.0" layoutY="283.0" rotate="90.0" startX="-100.0" stroke="#bfb9b9" strokeWidth="2.0" />
+      <Label layoutX="802.0" layoutY="151.0" styleClass="col-gray70" text="Incremental Rate" textFill="WHITE">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="804.0" layoutY="221.0" styleClass="col-gray70" text="Initial PR" textFill="WHITE">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="804.0" layoutY="295.0" styleClass="col-gray70" text="Increse PR" textFill="WHITE">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="807.0" layoutY="367.0" styleClass="col-gray70" text="ΔP - Check Point" textFill="WHITE">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

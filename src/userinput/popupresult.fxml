@@ -29,7 +29,8 @@
          </font>
       </Label>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#0d3d89" height="65.0" layoutX="134.0" layoutY="77.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="634.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e6e6e6" height="50.0" layoutX="133.0" layoutY="141.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="634.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e6e6e6" height="88.0" layoutX="133.0" layoutY="141.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="634.0" />
+      <Line endX="50.0" layoutX="469.0" layoutY="153.0" rotate="90.0" startX="-100.0" stroke="WHITE" strokeWidth="4.0" />
       <Label layoutX="258.0" layoutY="96.0" prefHeight="27.0" prefWidth="66.0" styleClass="font-montserrat-semiBold" text="Result" textFill="WHITE" AnchorPane.topAnchor="96.0">
          <font>
             <Font name="System Bold" size="18.0" />
@@ -40,12 +41,12 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Label fx:id="lblbpp" alignment="CENTER" layoutX="562.0" layoutY="149.0" prefHeight="37.0" prefWidth="100.0" styleClass="font-montserrat-semiBold" text="0.14" textFill="#646464">
+      <Label fx:id="lblbpp" alignment="CENTER" layoutX="562.0" layoutY="167.0" prefHeight="37.0" prefWidth="100.0" styleClass="font-montserrat-semiBold" text="0.14" textFill="#646464">
          <font>
             <Font name="System Bold" size="25.0" />
          </font>
       </Label>
-      <Label fx:id="lblbpdiamter" alignment="CENTER" layoutX="227.0" layoutY="150.0" prefWidth="100.0" styleClass="font-montserrat-semiBold" text="0.24" textFill="#646464">
+      <Label fx:id="lblbpdiamter" alignment="CENTER" layoutX="241.0" layoutY="167.0" prefWidth="100.0" styleClass="font-montserrat-semiBold" text="0.24" textFill="#646464">
          <font>
             <Font name="System Bold" size="25.0" />
          </font>
@@ -75,12 +76,5 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="161.0" layoutX="449.0" layoutY="77.0" stroke="TRANSPARENT" strokeType="INSIDE" width="5.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e6e6e6" height="37.0" layoutX="134.0" layoutY="196.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="634.0" />
-      <Label fx:id="msg" alignment="CENTER" contentDisplay="CENTER" layoutX="210.0" layoutY="201.0" prefHeight="17.0" prefWidth="484.0" text="result">
-         <font>
-            <Font name="System Bold" size="18.0" />
-         </font>
-      </Label>
    </children>
 </AnchorPane>

@@ -39,6 +39,8 @@ import application.Myapp;
 
 import com.jfoenix.controls.JFXToggleButton;
 
+import Constants.MyContants;
+
 public class NConfigurePageController implements Initializable {
 
 	@FXML
@@ -75,11 +77,11 @@ public class NConfigurePageController implements Initializable {
 
 	String propg1="low",profm1="low",propg2="low",profm2="low";
 	
-	String pp1scaletype="absolute",pp2scaletype="absolute",curvefit="off",crospres="0",crosflov="0";
+	String pp1scaletype="false",pp2scaletype="absolute",curvefit="off",crospres="0",crosflov="0";
 
 	static String selectedrad="",Por;
 	
-	public static boolean bolkey = false;
+	public static boolean bolkey = false,bolkeylet = false;
 	
 	Database db=new Database();
 	
@@ -99,6 +101,24 @@ public class NConfigurePageController implements Initializable {
 	
 	@FXML
 	Button btnsaveconnection;
+	
+	 @FXML
+	    private TextField txtincrrate;
+
+	    @FXML
+	    private TextField initpr;
+
+	    @FXML
+	    private TextField incrpr;
+
+	    @FXML
+	    private TextField delp;
+	    
+	    @FXML
+	    private TextField Faildrop;
+
+	    @FXML
+	    private Button btnsettingsave;
 	
 	
    MyDialoug mydia;
@@ -125,6 +145,26 @@ public class NConfigurePageController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub
+		
+		
+		settest_setting();
+		System.out.println("Incrate : "+MyContants.getincrate());
+		System.out.println("IncPR : "+MyContants.getincpr());
+		System.out.println("InitPR : "+MyContants.getinitpr());
+		System.out.println("Delp : "+MyContants.getdelp());
+		System.out.println("Fail drip : "+MyContants.getfaildrop());
+		System.out.println("Ip ddress : -" +DataStore.getipaddress());
+		
+		btnsettingsave.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+			
+				savesetting();
+				
+			}
+		});
 		
 		
 		btnsaveconnection.setOnAction(new EventHandler<ActionEvent>() {
@@ -160,7 +200,7 @@ btndefaultsetting.setOnAction(new EventHandler<ActionEvent>() {
 			
 			}
 		});
-		
+selectelowhigh();
 	setlastconnectiondata();
 
 			addShortCut();
@@ -349,19 +389,10 @@ btndefaultsetting.setOnAction(new EventHandler<ActionEvent>() {
 						
 
 								//Pro in absolute and relative in pg1
-								
+					
 										
-											if(ab1.isSelected())
-											{
-												
-												pp1scaletype="relative";
-											}
-											
-											else 
-											{
-												pp1scaletype="absolute";
-											}
-									
+										
+								
 
 								
 									//pro in absolute and relative in pg2
@@ -440,6 +471,49 @@ btndefaultsetting.setOnAction(new EventHandler<ActionEvent>() {
 					    
 					}
 					   
+					
+				}
+				
+				void savesetting()
+				{
+					MyContants.incrate =""+txtincrrate.getText();
+					MyContants.incpr =""+ incrpr.getText();
+					MyContants.initpr =""+ initpr.getText();
+					MyContants.delp =""+delp.getText();
+					MyContants.fdrop =""+Faildrop.getText();
+					
+					String query = "update test_setting set incrate='"+MyContants.incrate+"',incpr='"+MyContants.incpr+"',initpr='"+MyContants.initpr+"',delp='"+MyContants.delp+"',fdrop='"+MyContants.fdrop+"'"; 
+					
+					Database dd = new Database();
+					dd.Insert(query);
+					
+
+				 Toast.makeText(Main.mainstage, "Successfully save test setting....", 1000, 200, 200);
+
+					
+				}
+				
+				
+				void settest_setting()
+				{
+					Database d = new Database();
+					List<List<String>> info = d.getData("select * from test_setting");
+					
+					System.out.println("All test setting"+info);
+					
+					MyContants.incrate =""+ info.get(0).get(0);
+					MyContants.incpr =""+ info.get(0).get(1);
+					MyContants.initpr =""+ info.get(0).get(2);
+					MyContants.delp =""+ info.get(0).get(3);
+					MyContants.fdrop =""+ info.get(0).get(4);
+
+					
+					txtincrrate.setText(MyContants.incrate);
+					incrpr.setText(MyContants.incpr);
+					initpr.setText(MyContants.initpr);
+					delp.setText(MyContants.delp);
+					Faildrop.setText(MyContants.fdrop);
+
 					
 				}
 				
@@ -539,14 +613,27 @@ btndefaultsetting.setOnAction(new EventHandler<ActionEvent>() {
 		
 		void apllaypro()
 		{
-			selectelowhigh();
+			
 			applypro.setOnAction(new EventHandler<ActionEvent>() {
 				
 				@Override
 				public void handle(ActionEvent event) {
 					
+					if(ab1.isSelected())
+					{
+						bolkeylet=true;
+						Myapp.ab1scale="true";
+					}
 					
-					System.out.println("applypro");
+					else 
+					{
+						bolkeylet=false;
+						Myapp.ab1scale="false";
+
+					}
+					
+					
+					System.out.println("applypro"+Myapp.ab1scale);
 		/*			
 					String type="Pro";
 				
@@ -558,7 +645,7 @@ btndefaultsetting.setOnAction(new EventHandler<ActionEvent>() {
 					{
 					
 					}*/
-					String sql = "update configdata set pg1='"+ppg1.getText()+"', pg2='"+ppg2.getText()+"',fm1='"+pfm1.getText()+"',fm2='"+pfm2.getText()+"',pr='"+ppr.getText()+"',fc='"+pfc.getText()+"',pg1type='"+propg1+"',pg2type='"+propg2+"',fc1type='"+profm1+"',fc2type='"+profm2+"',ch='"+""+"',p1scaletype='"+pp1scaletype+"',p2scaletype='"+pp2scaletype+"'where type='"+"pro"+"'"; 
+					String sql = "update configdata set pg1='"+ppg1.getText()+"', pg2='"+ppg2.getText()+"',fm1='"+pfm1.getText()+"',fm2='"+pfm2.getText()+"',pr='"+ppr.getText()+"',fc='"+pfc.getText()+"',pg1type='"+propg1+"',pg2type='"+propg2+"',fc1type='"+profm1+"',fc2type='"+profm2+"',ch='"+""+"',p1scaletype='"+Myapp.ab1scale+"',p2scaletype='"+pp2scaletype+"'where type='"+"pro"+"'"; 
 
 					
 					if(db.Insert(sql))
@@ -718,12 +805,16 @@ btndefaultsetting.setOnAction(new EventHandler<ActionEvent>() {
 					}
 				
 						//absolute and relative pscaletype
+
 					
-					if (pscaletype4p.equals("relative")) {
-						pp1scaletype = "relative";
+					
+					
+					if (pscaletype4p.equals("true")) {
+						bolkeylet=true;
 						ab1.setSelected(true);
 					} else {
-						pp1scaletype = "absolute";
+						bolkeylet=false;
+						Myapp.ab1scale="false";
 					}
 
 					if (pscaletype5p.equals("relative")) {

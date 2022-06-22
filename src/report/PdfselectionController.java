@@ -37,7 +37,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import pdfreport.ExcelReport;
 import pdfreport.Multiplepororeport;
-import pdfreport.Multiplepororeportblood;
 import pdfreport.Singlepororeport;
 import pdfreport.Singlepororeportblood;
 import toast.MyDialoug;
@@ -121,11 +120,11 @@ public class PdfselectionController implements Initializable {
 			lblbrowse.setVisible(false);
 			btnbrows.setVisible(false);
 			excelsave.setVisible(false);
-			chsampleinfo.setVisible(true);
+			//chsampleinfo.setVisible(true);
 			showBrowsebtn();
 		}
 
-		txtnotes.setText("The following test Procedure is based on AATCC 127 Hydrostatic Pressure Level 3.");
+		txtnotes.setText("The following test Procedure is based on EN 20811 Hydrostatic Pressure.");
 
 		/*Close Popup*/
 		btncancel.setOnAction(new EventHandler<ActionEvent>() {
@@ -341,20 +340,9 @@ catch (Exception e) {
 			}
 		} else {
 			System.out.println("Selected images : "+imgs);
-			if(Myapp.pdftestname.equals("hydro"))
-			{				
 			Multiplepororeport mp = new Multiplepororeport();
 			mp.Report(path, ReportController.list_d, txtnotes.getText(), txtcomname.getText(),
 					graphs, bchkrowdata,bchkcoverpage, imgpath1,bolchsampleinfo,imgs);
-			}
-			else
-			{
-				Multiplepororeportblood mp = new Multiplepororeportblood();
-				mp.Report(path, ReportController.list_d, txtnotes.getText(), txtcomname.getText(),
-						graphs, bchkrowdata,bchkcoverpage, imgpath1,bolchsampleinfo,imgs);	
-				
-			}
-			
 		}
 	}
 

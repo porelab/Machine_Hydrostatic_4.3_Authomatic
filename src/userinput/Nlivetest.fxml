@@ -17,9 +17,9 @@
    <children>
       <AnchorPane layoutY="88.0" prefHeight="769.0" prefWidth="1401.0">
          <children>
-            <AnchorPane layoutX="4.0" layoutY="3.0" prefHeight="624.0" prefWidth="830.0" stylesheets="@livegraphcss.css">
+            <AnchorPane layoutX="4.0" layoutY="3.0" prefHeight="624.0" prefWidth="1058.0" stylesheets="@livegraphcss.css">
                <children>
-                  <TabPane fx:id="tb" layoutX="100.0" layoutY="100.0" prefHeight="627.0" prefWidth="1107.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="-3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <TabPane fx:id="tb" layoutX="100.0" layoutY="100.0" prefHeight="627.0" prefWidth="1015.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="-3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <tabs>
                       <Tab fx:id="tbb" text="F/PT vs Pressure">
                         <content>
@@ -34,7 +34,7 @@
                   </TabPane>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="guages" layoutX="834.0" layoutY="362.0" maxHeight="250.0" maxWidth="261.0" minHeight="144.0" minWidth="144.0" prefHeight="237.0" prefWidth="261.0" />
+            <AnchorPane fx:id="guages" layoutX="1095.0" layoutY="49.0" maxHeight="250.0" maxWidth="261.0" minHeight="144.0" minWidth="144.0" prefHeight="237.0" prefWidth="261.0" />
             <Label fx:id="lblcurranttest" layoutX="444.0" layoutY="5.0" styleClass="font-montserrat-medium" textFill="#7c7777" AnchorPane.leftAnchor="425.0" AnchorPane.topAnchor="5.0">
                <font>
                   <Font size="25.0" />
@@ -42,7 +42,6 @@
             </Label>
             <ScrollPane fx:id="scrollrecord" layoutX="1095.0" layoutY="362.0" prefHeight="184.0" prefWidth="261.0" />
             <Button fx:id="recordbtn" layoutX="1095.0" layoutY="561.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="261.0" text="Record Pressure" />
-            <StackPane fx:id="videoanc" layoutX="852.0" layoutY="35.0" prefHeight="315.0" prefWidth="501.0" />
          </children>
       </AnchorPane>
       <ImageView fitHeight="90.0" fitWidth="958.0" pickOnBounds="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -63,7 +62,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="startautotest" layoutX="1156.0" layoutY="18.0" maxHeight="53.0" maxWidth="60.0" minHeight="45.0" minWidth="60.0" mnemonicParsing="false" opacity="0.65" prefHeight="53.0" prefWidth="60.0" AnchorPane.leftAnchor="1220.0" AnchorPane.topAnchor="20.0">
+      <Button fx:id="startautotest" layoutX="1156.0" layoutY="18.0" maxHeight="53.0" maxWidth="60.0" minHeight="45.0" minWidth="60.0" mnemonicParsing="false" opacity="0.65" prefHeight="53.0" prefWidth="60.0" visible="false" AnchorPane.leftAnchor="1220.0" AnchorPane.topAnchor="20.0">
          <graphic>
             <ImageView fitHeight="54.0" fitWidth="57.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -133,7 +132,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="btnfail" layoutX="1149.0" layoutY="21.0" maxHeight="53.0" maxWidth="108.0" minHeight="29.0" minWidth="60.0" mnemonicParsing="false" opacity="0.65" prefHeight="53.0" prefWidth="60.0">
+      <Button fx:id="btnfail" layoutX="1149.0" layoutY="21.0" maxHeight="53.0" maxWidth="108.0" minHeight="29.0" minWidth="60.0" mnemonicParsing="false" opacity="0.65" prefHeight="53.0" prefWidth="60.0" AnchorPane.leftAnchor="1220.0">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>

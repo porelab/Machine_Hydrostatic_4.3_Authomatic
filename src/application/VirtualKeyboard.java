@@ -1,6 +1,7 @@
 package application;
 
 
+import userinput.NSelectproject1;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.BooleanProperty;
@@ -93,7 +94,7 @@ public class VirtualKeyboard {
 								.getText());
 
 				Myapp.virtualStage.close();
-			//	NSelectproject1.setVitual(Myapp.nextTf, null, Myapp.nextlbl,null);
+				NSelectproject1.setVitual(Myapp.nextTf, null, Myapp.nextlbl,null);
 				
 			}
 			else

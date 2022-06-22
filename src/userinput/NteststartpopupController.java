@@ -3,15 +3,22 @@ package userinput;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import toast.MyDialoug;
+import toast.Openscreen;
+import application.Database;
+import application.Main;
+import application.Myapp;
+
+import com.jfoenix.controls.JFXTextField;
+
 import extrafont.Myfont;
+import javafx.beans.binding.SetBinding;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import myconstant.Myconstant;
-import toast.MyDialoug;
 
 public class NteststartpopupController implements Initializable {
 	
@@ -29,7 +36,7 @@ public class NteststartpopupController implements Initializable {
 	
 		/*Test Start Popup*/
 		
-		lblsname.setText(Myconstant.sampleid);
+		lblsname.setText(Myapp.sampleid);
 		
 		//setLabelFont();
 		

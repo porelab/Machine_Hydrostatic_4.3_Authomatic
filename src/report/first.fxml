@@ -103,7 +103,7 @@
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <JFXToggleButton fx:id="autosync" layoutX="662.0" layoutY="112.0" styleClass="col-gray70" text="Sync" toggleColor="#254f94">
+      <JFXToggleButton fx:id="autosync" layoutX="662.0" layoutY="112.0" styleClass="col-gray70" text="Sync" toggleColor="#254f94" visible="false">
          <font>
             <Font size="15.0" />
          </font>
@@ -119,7 +119,7 @@
       </Button>
       <Button fx:id="btndownload" layoutX="761.0" layoutY="109.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="56.0" styleClass="trsnpbtn">
          <graphic>
-            <ImageView fitHeight="50.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="50.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true" visible="false">
                <image>
                   <Image url="@download.png" />
                </image>

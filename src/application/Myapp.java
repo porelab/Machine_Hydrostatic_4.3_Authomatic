@@ -27,7 +27,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import myconstant.Myconstant;
 import Notification.Notification;
 import Notification.Notification.Notifier;
 import Notification.NotificationBuilder;
@@ -69,7 +68,7 @@ public class Myapp {
 	public static SimpleBooleanProperty hb=new SimpleBooleanProperty(true);
 	public static String username,email,pass,status;
 	
-	public static String testtrial,indtype,materialapp,fluidname,fluidvalue,classification,crossection,thresold,tfactore,splate,thikness,industryname,lotnumber,startpress;
+	public static String sampleid,testtrial,indtype,materialapp,fluidname,fluidvalue,classification,crossection,thresold,tfactore,splate,thikness,industryname,lotnumber,startpress,maxpre;
 	
 	//New ADD
 	public static String materialtype,accbpt="100",accstep="50",accstability="50",stabilitytype,endpress,testsequence,chambertype,crossovertgl;
@@ -83,7 +82,7 @@ public class Myapp {
 	public static double maxpressure,maxflow;
 	
 	//Keyboard
-	public static String tabletmode;
+	public static String tabletmode,ab1scale;
 	
 	public static void cleardata()
 	{
@@ -232,48 +231,49 @@ public class Myapp {
 	
 	public static void setInternetWatch()
 	{
-		DatabaseReference connectedRef = FirebaseConnect.fb.getReference(".info/connected");
-		connectedRef.addValueEventListener(new ValueEventListener() {
-		  @Override
-		  public void onDataChange(DataSnapshot snapshot) {
-		    boolean connected = snapshot.getValue(Boolean.class);
-		    if (connected) {
-		     
-
-				javafx.application.Platform.runLater(new Runnable() {
-					
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						//status.setText("Connected !");
-			
-						isInternetConnected.set(true);
-						System.out.println("Internet Connected");
-					}
-				});
-		      
-		    } else {
-
-				javafx.application.Platform.runLater(new Runnable() {
-					
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-			
-
-						isInternetConnected.set(false);
-
-						System.out.println("Internet Disconnected");
-					}
-				});
-		    }
-		  }
-
-		  @Override
-		  public void onCancelled(DatabaseError error) {
-		    System.err.println("Listener was cancelled");
-		  }
-		});
+//	{
+//		DatabaseReference connectedRef = FirebaseConnect.fb.getReference(".info/connected");
+//		connectedRef.addValueEventListener(new ValueEventListener() {
+//		  @Override
+//		  public void onDataChange(DataSnapshot snapshot) {
+//		    boolean connected = snapshot.getValue(Boolean.class);
+//		    if (connected) {
+//		     
+//
+//				javafx.application.Platform.runLater(new Runnable() {
+//					
+//					@Override
+//					public void run() {
+//						// TODO Auto-generated method stub
+//						//status.setText("Connected !");
+//			
+//						isInternetConnected.set(true);
+//						System.out.println("Internet Connected");
+//					}
+//				});
+//		      
+//		    } else {
+//
+//				javafx.application.Platform.runLater(new Runnable() {
+//					
+//					@Override
+//					public void run() {
+//						// TODO Auto-generated method stub
+//			
+//
+//						isInternetConnected.set(false);
+//
+//						System.out.println("Internet Disconnected");
+//					}
+//				});
+//		    }
+//		  }
+//
+//		  @Override
+//		  public void onCancelled(DatabaseError error) {
+//		    System.err.println("Listener was cancelled");
+//		  }
+//		});
 	}
 	public static void restartApp()
 	{
@@ -337,13 +337,18 @@ public class Myapp {
 			control.setTooltip(null);
 		}
 	public static void PrintAll() {
-		System.out.println("sample id--"+Myconstant.sampleid);
-		System.out.println("Lot no --"+Myconstant.lotno);
-		System.out.println("Test Mode--"+Myconstant.testmode);
-		System.out.println("stepsize -"+Myconstant.stepsize);
-		System.out.println("pressurerate--"+Myconstant.pressurerate);
-		System.out.println("samplearea--"+Myconstant.samplearea);
-
+		System.out.println("sample id--"+Myapp.sampleid);
+		System.out.println("Lot no --"+Myapp.lotnumber);
+		System.out.println("Test trial--"+Myapp.testtrial);
+		System.out.println("Wetting fluid -"+Myapp.fluidname+"-----Wetting value"+Myapp.fluidvalue);
+		System.out.println("Toutchocity Factor--"+Myapp.tfactore);
+		System.out.println("BPT Thresold--"+Myapp.thresold);
+		System.out.println("BPT ACC--"+Myapp.accbpt);
+		System.out.println("Test ACC--"+Myapp.accstep);
+		System.out.println("Data stability---Typr----"+Myapp.stabilitytype+"--Value"+Myapp.accstability);
+		System.out.println("Test Press start and and---->"+Myapp.startpress+"---End Press---"+Myapp.endpress);
+		System.out.println("Test Medthod--"+Myapp.testsequence);
+		System.out.println("Sample Plate--"+Myapp.splate);
 		
 	}
 	

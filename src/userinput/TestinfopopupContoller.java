@@ -3,6 +3,7 @@ package userinput;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import application.DataStore;
 import application.Myapp;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,7 +12,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
-import myconstant.Myconstant;
 import toast.MyDialoug;
 
 public class TestinfopopupContoller implements Initializable {
@@ -33,7 +33,7 @@ public class TestinfopopupContoller implements Initializable {
 		// TODO Auto-generated method stub
 		
 		
-		lblsname.setText(Myconstant.sampleid);
+		lblsname.setText(Myapp.sampleid);
 				
 		if (Myapp.splate.equals("Small")) {
 			lblsplate.setText(Myapp.splate +" : 1");
