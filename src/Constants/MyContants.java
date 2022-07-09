@@ -6,6 +6,8 @@ import application.Database;
 
 public class MyContants {
 	
+	//in seconds
+	public static int mode2time=200;
 	
 	public static String sampleid="MySample",lotno="MyLot";
 	public static String stepsize="1";

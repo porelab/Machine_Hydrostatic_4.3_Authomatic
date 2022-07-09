@@ -3,6 +3,7 @@ package userinput;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import communicationProtocol.Mycommand;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -46,8 +47,17 @@ public class NabourdpopupController implements Initializable {
 							{
 
 								 Toast.makeText(Main.mainstage, "Test Aborting...", 1000, 200, 200);
+							
+								 NLivetestController.isAbourtest.set(true); 
 								 MyDialoug.closeDialoug();
-									Openscreen.open("/application/first.fxml");
+//									Mycommand.valveOff('5', 0);
+//									try {
+//
+//										Thread.sleep(5000);
+//									} catch (Exception e) {
+//
+//									}
+//									Openscreen.open("/application/first.fxml");
 									
 									
 							}
@@ -83,9 +93,25 @@ public class NabourdpopupController implements Initializable {
 			public void handle(ActionEvent arg0) {
 				// TODO Auto-generated method stub
 				
-				MyDialoug.closeDialoug();
-				Openscreen.open("/application/first.fxml");
 				
+				
+
+				 NLivetestController.isAbourtest.set(true); 
+				
+				MyDialoug.closeDialoug();
+				
+//				Mycommand.valveOff('5', 0);
+//				try {
+//
+//					Thread.sleep(5000);
+//				} catch (Exception e) {
+//
+//				}
+//				
+//				
+//				
+//				Openscreen.open("/application/first.fxml");
+//				
 				
 				/*
 				 * 	writeFormat	wrd=new writeFormat();
