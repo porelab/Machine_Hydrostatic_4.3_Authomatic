@@ -687,6 +687,54 @@ public class Singlepororeport {
 
 	
 
+		PdfPCell t31 = new PdfPCell(new Paragraph("Sample Thickness", sampleinfoq));
+		t31.setPaddingLeft(10);
+		t31.setPaddingTop(1);
+		t31.setBorder(1);
+		t31.setBorder(t31.LEFT | t31.RIGHT);
+		t31.setFixedHeight(25f);
+		t31.setBorderColor(new BaseColor(130, 130, 130));
+		t31.setBackgroundColor(backcellcoltable1);
+		t31.setHorizontalAlignment(Element.ALIGN_LEFT);
+		t31.setVerticalAlignment(Element.ALIGN_MIDDLE);
+
+		PdfPCell t41 = new PdfPCell(new Paragraph("" + d.data.get("thic")
+				+ " mm", sampleinfoa));
+		t41.setBorder(1);
+		t41.setBorder(t41.RIGHT);
+		t41.setBorderColor(new BaseColor(130, 130, 130));
+		t41.setPaddingLeft(10);
+		t41.setFixedHeight(25f);
+		t41.setBackgroundColor(backcellcoltable1);
+		t41.setPaddingTop(1);
+		t41.setHorizontalAlignment(Element.ALIGN_LEFT);
+		t41.setVerticalAlignment(Element.ALIGN_MIDDLE);
+		
+		
+		PdfPCell t3d = new PdfPCell(new Paragraph("Sample Diamter", sampleinfoq));
+		t3d.setPaddingLeft(10);
+		t3d.setPaddingTop(1);
+		t3d.setBorder(1);
+		t3d.setBorder(t3d.LEFT | t3d.RIGHT);
+		t3d.setFixedHeight(25f);
+		t3d.setBorderColor(new BaseColor(130, 130, 130));
+		//t3d.setBackgroundColor(backcellcoltable1);
+		t3d.setHorizontalAlignment(Element.ALIGN_LEFT);
+		t3d.setVerticalAlignment(Element.ALIGN_MIDDLE);
+
+		PdfPCell t4d = new PdfPCell(new Paragraph("" + d.data.get("duration")
+				+ " ", sampleinfoa));
+		t4d.setBorder(1);
+		t4d.setBorder(t4d.RIGHT);
+		t4d.setBorderColor(new BaseColor(130, 130, 130));
+		t4d.setPaddingLeft(10);
+		t4d.setFixedHeight(25f);
+		//t4d.setBackgroundColor(backcellcoltable1);
+		t4d.setPaddingTop(1);
+		t4d.setHorizontalAlignment(Element.ALIGN_LEFT);
+		t4d.setVerticalAlignment(Element.ALIGN_MIDDLE);
+
+		
 		PdfPCell t3 = new PdfPCell(new Paragraph("Test Duration", sampleinfoq));
 		t3.setPaddingLeft(10);
 		t3.setPaddingTop(1);
@@ -729,7 +777,7 @@ public class Singlepororeport {
 		f22.setBorder(f22.RIGHT|f22.BOTTOM);
 		f22.setBorderColor(new BaseColor(130, 130, 130));
 		f22.setPaddingLeft(10);
-		// f22.setBackgroundColor(backcellcoltable1);
+		 //f22.setBackgroundColor(backcellcoltable1);
 		f22.setPaddingTop(1);
 		f22.setFixedHeight(25f);
 		f22.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -743,12 +791,21 @@ public class Singlepororeport {
 		tablem.addCell(cell5);
 		tablem.addCell(cell51);
 		
+		
+
 		tablem.addCell(cell3);
 		tablem.addCell(cell4);
 		
 		
 		tablem.addCell(c1);
 		tablem.addCell(c2);
+		
+		tablem.addCell(t31);
+		tablem.addCell(t41);
+		
+		tablem.addCell(t3d);
+		tablem.addCell(t4d);
+		
 		
 		tablem.addCell(t3);
 		tablem.addCell(t4);
@@ -1087,7 +1144,7 @@ public class Singlepororeport {
 
 		PdfPCell d2 = new PdfPCell(
 				new Paragraph(
-						"Sample specimen are not drawn by M19 Lab. Result relates to the sample tested. The report shall not be reproduced except in full, without the written approval of the laboratory. The report is strically confidential and technical inforamtion of client only. Not for advertisement, promotion, publicity or litigation.",
+						"Result relates to the sample tested. The report shall not be reproduced except in full, without the written approval of the laboratory. The report is strically confidential and technical inforamtion of client only. Not for advertisement, promotion, publicity or litigation.",
 						addresslab));
 		d2.setPaddingLeft(0);
 		d2.setPaddingTop(1);

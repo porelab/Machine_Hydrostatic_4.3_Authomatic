@@ -9,7 +9,7 @@ public class MyContants {
 	//in seconds
 	public static int mode2time=200;
 	
-	public static String sampleid="MySample",lotno="MyLot";
+	public static String sampleid="MySample",lotno="MyLot",fixtime="0",samplethickness="0";
 	public static String stepsize="1";
 	public static double maxPressure=4;
 	
@@ -17,7 +17,7 @@ public class MyContants {
 	
 	/*test settong*/
 	
-	public static String incrate,incpr,initpr,delp,fdrop;
+	public static String incrate,incpr,initpr,delp,fdrop,splates;
 
 	
 	
@@ -115,5 +115,14 @@ public class MyContants {
 		fdrop =(ll.get(0).get(0));
 
 		return fdrop;
+	}
+	public static String getSplate()
+	{
+		String splate="";
+		Database db=new Database();		
+		List<List<String>> ll=db.getData("select splate from test_setting");
+		splate =(ll.get(0).get(0));
+
+		return splate;
 	}
 }

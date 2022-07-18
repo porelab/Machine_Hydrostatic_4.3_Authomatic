@@ -16,10 +16,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -43,6 +45,8 @@ import Constants.MyContants;
 
 public class NConfigurePageController implements Initializable {
 
+	
+	
 	@FXML
 	AnchorPane root,ancwifi;
 	
@@ -85,7 +89,7 @@ public class NConfigurePageController implements Initializable {
 	
 	Database db=new Database();
 	
-	static ToggleGroup tgb5,tgb6,tgbconnection;
+	static ToggleGroup tgb5,tgb6,tgbconnection,tgbsplate;
 	static String selectedrad4 = "",selectedrad5 = "",selectedradconnection = "";
 	
 	@FXML
@@ -95,6 +99,15 @@ public class NConfigurePageController implements Initializable {
 	
 	@FXML
 	RadioButton radiowifi,radiohospot;
+	
+	@FXML
+    private RadioButton rdsmall;
+
+    @FXML
+    private RadioButton rdmedium;
+
+    @FXML
+    private RadioButton rdlarge;
 	
 	@FXML
 	TextField txtwifiid,txtwifipass;
@@ -201,6 +214,7 @@ btndefaultsetting.setOnAction(new EventHandler<ActionEvent>() {
 			}
 		});
 selectelowhigh();
+setsampleplate();
 	setlastconnectiondata();
 
 			addShortCut();
@@ -234,6 +248,66 @@ selectelowhigh();
 			 setkeyboardmode();
 		
 		 }
+	/* Material Type Selection */
+	void setsampleplate() {
+
+		tgbsplate = new ToggleGroup();
+
+		rdsmall.setToggleGroup(tgbsplate);
+		rdsmall.setUserData("1");
+		rdmedium.setToggleGroup(tgbsplate);
+		rdmedium.setUserData("2");
+		rdlarge.setToggleGroup(tgbsplate);
+		rdlarge.setUserData("3");
+
+		selectedrad4 = "1";
+		MyContants.splates = "small";
+
+		tgbsplate.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Toggle> arg0,
+					Toggle arg1, Toggle arg2) {
+				if (arg2 == null)
+					arg1.setSelected(true);
+				selectedrad4 = arg2.getUserData().toString();
+
+				if (selectedrad4.equals("small")) {
+					MyContants.splates = "small";
+				}
+
+				else if (selectedrad4.equals("medium")) {
+					MyContants.splates = "medium";
+
+				}
+
+				else {
+					MyContants.splates = "large";
+				}
+
+			}
+
+		}
+
+		);
+
+	}
+
+	
+	void setToggleButtonProperty(ToggleButton tb, String title, String img,
+			ToggleGroup group) {
+		Image image = new Image(this.getClass().getResourceAsStream(img));
+		ImageView imageView = new ImageView(image);
+		imageView.setFitWidth(150);
+		imageView.setFitHeight(160);
+		tb.setGraphic(imageView);
+		tb.setContentDisplay(ContentDisplay.TOP);
+		tb.setToggleGroup(group);
+		tb.setUserData(title);
+		tb.setText(title);
+
+	}
+
 
 			void setMainBtns()
 			{
@@ -482,7 +556,7 @@ selectelowhigh();
 					MyContants.delp =""+delp.getText();
 					MyContants.fdrop =""+Faildrop.getText();
 					
-					String query = "update test_setting set incrate='"+MyContants.incrate+"',incpr='"+MyContants.incpr+"',initpr='"+MyContants.initpr+"',delp='"+MyContants.delp+"',fdrop='"+MyContants.fdrop+"'"; 
+					String query = "update test_setting set incrate='"+MyContants.incrate+"',incpr='"+MyContants.incpr+"',initpr='"+MyContants.initpr+"',delp='"+MyContants.delp+"',fdrop='"+MyContants.fdrop+"',splate='"+MyContants.splates+"'"; 
 					
 					Database dd = new Database();
 					dd.Insert(query);
@@ -506,6 +580,7 @@ selectelowhigh();
 					MyContants.initpr =""+ info.get(0).get(2);
 					MyContants.delp =""+ info.get(0).get(3);
 					MyContants.fdrop =""+ info.get(0).get(4);
+					MyContants.splates =""+ info.get(0).get(5);
 
 					
 					txtincrrate.setText(MyContants.incrate);
@@ -513,6 +588,21 @@ selectelowhigh();
 					initpr.setText(MyContants.initpr);
 					delp.setText(MyContants.delp);
 					Faildrop.setText(MyContants.fdrop);
+					
+					
+					/* splate */
+					if (MyContants.splates.equals("small")) {
+						rdsmall.selectedProperty().set(true);
+							Myapp.splate = "small";
+					} else if (MyContants.splates.equals("medium")) {
+						rdmedium.selectedProperty().set(true);
+						Myapp.splate = "medium";
+
+					} else if (MyContants.splates.equals("large")) {
+						rdlarge.selectedProperty().set(true);
+						Myapp.thresold = "large";
+
+					}
 
 					
 				}

@@ -510,7 +510,7 @@
                                     <String fx:value="col-gray70" />
                                  </styleClass>
                               </TextField>
-                              <Button fx:id="btnsettingsave" layoutX="232.0" layoutY="524.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="223.0" style="-fx-background-radius: 50;" styleClass="linear-grad-to-bottom-right" text="Save &amp; Apply" textFill="WHITE">
+                              <Button fx:id="btnsettingsave" layoutX="565.0" layoutY="520.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="223.0" style="-fx-background-radius: 50;" styleClass="linear-grad-to-bottom-right" text="Save &amp; Apply" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="20.0" />
                                  </font>
@@ -561,6 +561,26 @@
                                     <Font size="24.0" />
                                  </font>
                               </Label>
+                              <Label fx:id="lblthikness1" layoutX="663.0" layoutY="60.0" prefHeight="36.0" prefWidth="675.0" text="Select sample holder" textFill="#0e3c87">
+                                 <font>
+                                    <Font size="25.0" />
+                                 </font>
+                              </Label>
+                              <RadioButton fx:id="rdsmall" layoutX="682.0" layoutY="141.0" mnemonicParsing="false" selected="true" styleClass="col-gray70" text="Small">
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
+                              </RadioButton>
+                              <RadioButton fx:id="rdmedium" layoutX="788.0" layoutY="141.0" mnemonicParsing="false" styleClass="col-gray70" text="Medium">
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
+                              </RadioButton>
+                              <RadioButton fx:id="rdlarge" layoutX="917.0" layoutY="141.0" mnemonicParsing="false" styleClass="col-gray70" text="Large">
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
+                              </RadioButton>
                            </children>
                         </AnchorPane>
                      </children>

@@ -14,7 +14,7 @@ import javafx.scene.control.ToggleButton;
 public class NconfihControll implements Initializable {
 	
 	@FXML
-	JFXToggleButton tgb2;
+	JFXToggleButton tgb2,tc_11,tc_12,tc_13;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {

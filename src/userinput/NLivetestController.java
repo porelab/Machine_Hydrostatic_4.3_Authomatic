@@ -1582,6 +1582,15 @@ public class NLivetestController implements Initializable {
 				cs.newLine("result", result);
 				cs.newLine("bpressure", "" + bpress);
 				cs.newLine("sample", MyContants.sampleid);
+
+				/*Jayes*/
+				
+				cs.newLine("lotno", ""+MyContants.lotno);
+				cs.newLine("dia", ""+MyContants.splates);
+				cs.newLine("thic", ""+MyContants.samplethickness);
+				/*Jayesh*/
+
+				
 				cs.newLine("fluidname", Myapp.fluidname);
 				cs.newLine("fluidvalue", Myapp.fluidvalue);
 				cs.newLine("mode", "" + Myapp.thresold);
