@@ -1,0 +1,23 @@
+hydrostatic
+testname,hydrostatic
+result,PASS
+bpressure,1.0295872434576925
+sample,Orange
+fluidname,
+fluidvalue,
+mode,null
+recordy,
+recordx,
+duration,0 min:47 sec
+durationsecond,47
+testtime,12:40:35
+testdate,20/07/2022
+customerid,N0048
+lotno,1
+dia,5cm
+thic,0.1
+indistry,
+application,
+splate,
+ans,0.2104829480430297,0.34979781795986753,0.46897077897306616,0.5864652475776282,0.6922102693217358,0.7811703669794756,0.8567025253681226,0.9238422217135867,0.9809109636072311,1.0295872434576925
+t,0.0,2.0,5.0,7.0,10.0,12.0,15.0,18.0,20.0,23.0

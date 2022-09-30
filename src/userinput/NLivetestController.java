@@ -144,6 +144,7 @@ public class NLivetestController implements Initializable {
 	private Tile gauge5;
 
 	double highPressure = 0;
+	double highPressureCheck=0;
 
 	@FXML
 	ToggleButton chamberonoff;
@@ -238,7 +239,7 @@ public class NLivetestController implements Initializable {
 		 mode2valveClose = true;
 
 		
-		System.out.println("Mode : " + MyContants.smode);
+		System.out.println("test i Mode : " + MyContants.smode);
 		System.out.println("\n\n\nStep Size : " + stepsize);
 		System.out.println("dropPer : " + dropPer);
 		System.out.println("initialPR : " + initialPR);
@@ -252,13 +253,25 @@ public class NLivetestController implements Initializable {
 
 	void setBubblePoints(double pr) {
 
-		System.out.println("");
 		
-		if (pr > 0.1) {
+		
+		double lastp=highPressureCheck;
+		double currp=DataStore.ConvertPressure(pr);
+		
+		System.out.println("highPressure : "+lastp + " : Current pr : "+currp + ":Condition : "+(currp >= lastp));
+		
+		
+		
+		
+		if (pr > 0.1 && (DataStore.ConvertPressure(pr)>highPressureCheck ||highPressureCheck==0)) {
 
-			if (highPressure < pr) {
-				highPressure = pr;
-			}
+			
+			highPressureCheck=DataStore.ConvertPressure(pr);
+			highPressure = pr;
+//			if (highPressure <= pr) {
+//				highPressure = pr;
+//				
+//			}
 
 			if (tlist.size() == 0) {
 				tempt1 = System.currentTimeMillis();
@@ -275,7 +288,7 @@ public class NLivetestController implements Initializable {
 				@Override
 				public void run() {
 
-					series2.getData().add(new XYChart.Data(readtime, pr));
+					//series2.getData().add(new XYChart.Data(readtime, pr));
 					series2.getData().add(
 							new XYChart.Data(readtime, DataStore
 									.ConvertPressure(pr)));
@@ -437,10 +450,10 @@ public class NLivetestController implements Initializable {
 				System.out.println("Stop and wathc : "+pr+" :  "+endPressure);
 
 				Mycommand.valveOff('1', 500);
-			//	Mycommand.setDACValue('1', 0, 10000);
+			//	Mycommand.setDACValue('1', 0, 6000);
 			}
 
-			if(readtime+mode2timeminus>MyContants.mode2time && mode2timeminus!=0)
+			if(readtime+mode2timeminus>(Double.parseDouble(MyContants.fixtime)*60) && mode2timeminus!=0)
 			{
 				isCompletetest=true;
 			}
@@ -1614,7 +1627,7 @@ public class NLivetestController implements Initializable {
 
 
                 cs.newLine("lotno", ""+MyContants.lotno);
-				cs.newLine("dia", ""+MyContants.splates);
+				cs.newLine("dia", ""+MyContants.getSplate());
 				cs.newLine("thic", ""+MyContants.samplethickness);
 				
 				cs.newLine("indistry", Myapp.indtype);

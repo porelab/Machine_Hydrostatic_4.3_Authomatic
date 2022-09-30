@@ -711,7 +711,7 @@ public class Singlepororeport {
 		t41.setVerticalAlignment(Element.ALIGN_MIDDLE);
 		
 		
-		PdfPCell t3d = new PdfPCell(new Paragraph("Sample Diamter", sampleinfoq));
+		PdfPCell t3d = new PdfPCell(new Paragraph("Sample Diameter", sampleinfoq));
 		t3d.setPaddingLeft(10);
 		t3d.setPaddingTop(1);
 		t3d.setBorder(1);
@@ -722,7 +722,7 @@ public class Singlepororeport {
 		t3d.setHorizontalAlignment(Element.ALIGN_LEFT);
 		t3d.setVerticalAlignment(Element.ALIGN_MIDDLE);
 
-		PdfPCell t4d = new PdfPCell(new Paragraph("" + d.data.get("duration")
+		PdfPCell t4d = new PdfPCell(new Paragraph("" + d.data.get("dia")
 				+ " ", sampleinfoa));
 		t4d.setBorder(1);
 		t4d.setBorder(t4d.RIGHT);
@@ -1091,7 +1091,7 @@ public class Singlepororeport {
 			n3.setBorder(0);
 
 			// n3.setBorder(n3.BOTTOM);
-			n3.setFixedHeight(250f);
+			n3.setFixedHeight(220f);
 			// n3.setBackgroundColor(backcellcoltable1);
 			n3.setBorderColor(new BaseColor(130, 130, 130));
 			n3.setHorizontalAlignment(Element.ALIGN_TOP);

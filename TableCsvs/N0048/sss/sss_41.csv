@@ -1,0 +1,20 @@
+hydrostatic
+testname,hydrostatic
+result,FAIL
+bpressure,0.12655832761120145
+sample,sss
+fluidname,
+fluidvalue,
+mode,null
+recordy,0.0,0.10641641870756224,0.12655832761120145
+recordx,0.0,0.0,2.0
+duration,0 min:41 sec
+durationsecond,41
+testtime,14:30:15
+testdate,12/07/2022
+customerid,N0048
+indistry,
+application,
+splate,
+ans,0.10641641870756224,0.12655832761120145
+t,0.0,2.0

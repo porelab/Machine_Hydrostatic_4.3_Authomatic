@@ -844,7 +844,8 @@ public class DataStore
 			
 		}
 		
-		return Myapp.getRoundDouble(pressure, getRoundOff());
+		
+		return pressure;// Myapp.getRoundDouble(pressure, getRoundOff());
 	}
 
 	public static double barToPsi(double bar)

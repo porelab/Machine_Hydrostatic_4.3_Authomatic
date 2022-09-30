@@ -1,0 +1,23 @@
+hydrostatic
+testname,hydrostatic
+result,PASS
+bpressure,3.5144274052033264
+sample,nvbn
+fluidname,
+fluidvalue,
+mode,null
+recordy,
+recordx,
+duration,0 min:31 sec
+durationsecond,31
+testtime,16:40:40
+testdate,19/07/2022
+customerid,N0048
+lotno,1
+dia,5cm
+thic,1
+indistry,
+application,
+splate,5cm
+ans,0.22626077668421551,1.4314183260852982,2.519081406881819,3.5144274052033264
+t,0.0,2.0,5.0,7.0

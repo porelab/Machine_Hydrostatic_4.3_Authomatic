@@ -261,7 +261,7 @@ setsampleplate();
 		rdlarge.setUserData("3");
 
 		selectedrad4 = "1";
-		MyContants.splates = "small";
+		MyContants.splates = "5cm";
 
 		tgbsplate.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
 
@@ -272,17 +272,16 @@ setsampleplate();
 					arg1.setSelected(true);
 				selectedrad4 = arg2.getUserData().toString();
 
-				if (selectedrad4.equals("small")) {
-					MyContants.splates = "small";
+				if (selectedrad4.equals("1")) {
+					MyContants.splates = "5cm";
 				}
 
-				else if (selectedrad4.equals("medium")) {
-					MyContants.splates = "medium";
-
+				else if (selectedrad4.equals("2")) {
+					MyContants.splates = "7.95cm";
 				}
 
 				else {
-					MyContants.splates = "large";
+					MyContants.splates = "11.28cm";
 				}
 
 			}
@@ -591,16 +590,16 @@ setsampleplate();
 					
 					
 					/* splate */
-					if (MyContants.splates.equals("small")) {
+					if (MyContants.splates.equals("5cm")) {
 						rdsmall.selectedProperty().set(true);
-							Myapp.splate = "small";
-					} else if (MyContants.splates.equals("medium")) {
+							Myapp.splate = "5cm";
+					} else if (MyContants.splates.equals("7.95cm")) {
 						rdmedium.selectedProperty().set(true);
-						Myapp.splate = "medium";
+						Myapp.splate = "7.95cm";
 
-					} else if (MyContants.splates.equals("large")) {
+					} else if (MyContants.splates.equals("11.28cm")) {
 						rdlarge.selectedProperty().set(true);
-						Myapp.thresold = "large";
+						Myapp.splate = "11.28cm";
 
 					}
 

@@ -217,7 +217,7 @@ public class QuicktestController implements Initializable {
 		rdmode2.setUserData("2");
 		
 		modeselectedrad = "1";
-		MyContants.smode = "rdmode1";
+		MyContants.smode = "mode1";
 
 		tgbmode.selectedToggleProperty().addListener(
 				new ChangeListener<Toggle>() {
@@ -229,13 +229,13 @@ public class QuicktestController implements Initializable {
 						modeselectedrad = arg2.getUserData().toString();
 
 						if (modeselectedrad.equals("1")) {
-							MyContants.smode = "rdmode1";
+							MyContants.smode = "mode1";
 							 recfixedtime.setVisible(false);
 							 txtfixedtime.setVisible(false);
 						}
 
 						 else {
-							 MyContants.smode = "rdmode2";
+							 MyContants.smode = "mode2";
 							 recfixedtime.setVisible(true);
 							 txtfixedtime.setVisible(true);
 						}
@@ -456,15 +456,15 @@ try {
 		
 		
 		
-		if (smode.equals("rdmode1")) {
+		if (smode.equals("mode1")) {
 			rdmode1.selectedProperty().set(true);
-			MyContants.smode = "rdmode1";
+			MyContants.smode = "mode1";
 			txtfixedtime.setVisible(false);
 			recfixedtime.setVisible(false);
 
 		} else {
 			rdmode2.selectedProperty().set(true);
-			MyContants.smode = "rdmode2";
+			MyContants.smode = "mode2";
 			txtfixedtime.setVisible(true);
 			recfixedtime.setVisible(true);
 		}
@@ -503,6 +503,8 @@ try {
 		List<List<String>> alldata = d1
 				.getData("select * from quicktest where emailid='" + Myapp.email
 						+ "' and  last='true' ");
+		
+		System.out.println("All Data Quicktest"+alldata);
 
 		String testmode = "" + alldata.get(0).get(1);
 
@@ -529,15 +531,15 @@ try {
 
 		/* sample Mode */
 
-		if (smode.equals("rdmode1")) {
+		if (smode.equals("mode1")) {
 			rdmode1.selectedProperty().set(true);
-			MyContants.smode = "rdmode1";
+			MyContants.smode = "mode1";
 			txtfixedtime.setVisible(false);
 			recfixedtime.setVisible(false);
 
 		} else {
 			rdmode2.selectedProperty().set(true);
-			MyContants.smode = "rdmode2";
+			MyContants.smode = "mode2";
 			txtfixedtime.setVisible(true);
 			recfixedtime.setVisible(true);
 		}

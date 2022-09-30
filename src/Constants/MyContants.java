@@ -7,7 +7,7 @@ import application.Database;
 public class MyContants {
 	
 	//in seconds
-	public static int mode2time=200;
+
 	
 	public static String sampleid="MySample",lotno="MyLot",fixtime="0",samplethickness="0";
 	public static String stepsize="1";
@@ -17,7 +17,7 @@ public class MyContants {
 	
 	/*test settong*/
 	
-	public static String incrate,incpr,initpr,delp,fdrop,splates;
+	public static String incrate,incpr,initpr,delp,fdrop,splates,dia;
 
 	
 	
