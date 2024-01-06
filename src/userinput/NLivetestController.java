@@ -505,9 +505,19 @@ public class NLivetestController implements Initializable {
 			recorddata.add(readpre);
 			recordtime.add(readtime);
 			generateList();
-			if (recorddata.size() > 2) {
-				completeTest();
+			if(MyContants.smode.equals("mode2"))
+			{
+				if (recorddata.size() > 0) {
+					completeTest();
+				}
 			}
+			else
+			{
+				if (recorddata.size() > 2) {
+					completeTest();
+				}
+			}
+			
 		} else {
 			Toast.makeText(Main.mainstage, "Already exist", 500, 100, 100);
 		}
