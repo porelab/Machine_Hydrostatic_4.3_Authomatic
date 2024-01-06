@@ -253,7 +253,7 @@ public class NLivetestController implements Initializable {
 
 	void setBubblePoints(double pr) {
 
-		System.out.println("set mode 1");
+		
 		
 		double lastp=highPressureCheck;
 		double currp=DataStore.ConvertPressure(pr);
@@ -304,14 +304,13 @@ public class NLivetestController implements Initializable {
 				double prCount = (double) per * max / 100;
 				lastPrCount = (int) prCount;
 				print("PR Count :" + prCount + "\nPr : " + initialPR);
-				System.out.println("set Pr");
 				Mycommand.setDACValue('1', lastPrCount, 500);
 			}
 
 			if (pr > prCheck) {
 
 				System.out.println("Mode : " + MyContants.smode);
-				double increment = (MyContants.smode.equals("mode2") ? prx
+				double increment = (MyContants.smode == "mode2" ? prx
 						+ (prn * pry) : prx);
 				print("Increment \nPrx: " + prx + "pry: " + pry + " prn: "
 						+ prn + "\nAnswer : " + increment);
@@ -324,7 +323,6 @@ public class NLivetestController implements Initializable {
 
 				lastPrCount = lastPrCount + (int) prCount;
 				print("total PR count : " + lastPrCount);
-				System.out.println("set Pr");
 				Mycommand.setDACValue('1', lastPrCount, 200);
 
 				prn++;
@@ -366,7 +364,7 @@ public class NLivetestController implements Initializable {
 
 	void setBubblePoints1(double pr) {
 
-		System.out.println("set mode 2 : "+pr);
+		System.out.println("set bubble 1 : "+pr);
 		
 		if (pr > 0.01) {
 
@@ -399,13 +397,12 @@ public class NLivetestController implements Initializable {
 
 			if (inilizedPressure) {
 				inilizedPressure = false;
-				double per = (double) (endPressure+2) * 100
+				double per = (double) (endPressure+3) * 100
 						/ Integer.parseInt(DataStore.getPr());
 				int max = 65535;
 				double prCount = (double) per * max / 100;
 				lastPrCount = (int) prCount;
-				print("Pr set :" + lastPrCount + "\nEnd Pr : " + (endPressure+2));
-				System.out.println("set Pr");
+				print("Pset :" + prCount + "\nPr : " + endPressure);
 				Mycommand.setDACValue('1', lastPrCount, 500);
 			}
 
@@ -437,8 +434,8 @@ public class NLivetestController implements Initializable {
 				double per = dropPer;
 				double diff = (double) curpress * per / 100;
 
-				//System.out.println("Last Pr : " + curpress);
-				//System.out.println("Current  : " + pr);
+				System.out.println("Last Pr : " + curpress);
+				System.out.println("Current  : " + pr);
 
 				System.out.println("Diff : " + (curpress - diff));
 				if (pr < (curpress - diff)) {
@@ -456,13 +453,7 @@ public class NLivetestController implements Initializable {
 			//	Mycommand.setDACValue('1', 0, 6000);
 			}
 
-			
-			System.out.println("Read time : "+readtime);
-			System.out.println("mode2timeminus time : "+mode2timeminus);
-			System.out.println("Readtime + mode2time : "+(readtime+mode2timeminus));
-			System.out.println("Fix time : "+Double.parseDouble(MyContants.fixtime)*60);
-			System.out.println("Check : "+(readtime-mode2timeminus)+" > "+((Double.parseDouble(MyContants.fixtime)*60)));
-			if(readtime-mode2timeminus>(Double.parseDouble(MyContants.fixtime)*60) && mode2timeminus!=0)
+			if(readtime+mode2timeminus>(Double.parseDouble(MyContants.fixtime)*60) && mode2timeminus!=0)
 			{
 				isCompletetest=true;
 			}
@@ -1507,7 +1498,6 @@ public class NLivetestController implements Initializable {
 						print("testtype = 3 : PR Count :" + prCount + "\nPr : " + prCountint);
 						
 						testtype = 3;
-						System.out.println("set Pr");
 						Mycommand.setDACValue('1', prCountint, 500);
 						setDelay(1200);
 					} else {
@@ -1519,7 +1509,6 @@ public class NLivetestController implements Initializable {
 						int prCountint = (int) prCount;
 						print("testtype = 2 :PR Count :" + prCount + "\nPr : " + prCountint);
 						testtype = 2;
-						System.out.println("set Pr");
 						Mycommand.setDACValue('1', prCountint, 500);
 						setDelay(1200);
 					}
