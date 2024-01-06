@@ -140,7 +140,7 @@ public class DataStore
 
 		
 		// for live graph...
-	public static int pressure_min=0,pressure_max=0;
+	public static int pressure_min=0;
 		
 	    
 		

@@ -848,7 +848,7 @@ public class NLivetestControllerold implements Initializable {
 	// set main graphs....
 	void setGraph() {
 		root.getChildren().add(sc);
-		DataStore.pressure_max = Integer.parseInt(Myapp.endpress);
+	//	DataStore.pressure_max = Integer.parseInt(Myapp.endpress);
 		sc.setAxisSortingPolicy(SortingPolicy.Y_AXIS.NONE);
 		sc.setAxisSortingPolicy(SortingPolicy.X_AXIS.NONE);
 
