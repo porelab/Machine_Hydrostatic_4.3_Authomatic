@@ -364,7 +364,7 @@ public class NLivetestController implements Initializable {
 
 	void setBubblePoints1(double pr) {
 
-		System.out.println("set bubble 1 : "+pr);
+		System.out.println("set mode 1 : "+pr);
 		
 		if (pr > 0.01) {
 
@@ -397,12 +397,12 @@ public class NLivetestController implements Initializable {
 
 			if (inilizedPressure) {
 				inilizedPressure = false;
-				double per = (double) (endPressure+3) * 100
+				double per = (double) (endPressure) * 100
 						/ Integer.parseInt(DataStore.getPr());
 				int max = 65535;
 				double prCount = (double) per * max / 100;
 				lastPrCount = (int) prCount;
-				print("Pset :" + prCount + "\nPr : " + endPressure);
+				print("Pr set :" + prCount + "\nEnd Pr : " + endPressure);
 				Mycommand.setDACValue('1', lastPrCount, 500);
 			}
 
@@ -453,6 +453,11 @@ public class NLivetestController implements Initializable {
 			//	Mycommand.setDACValue('1', 0, 6000);
 			}
 
+			
+			System.out.println("Read time : "+readtime);
+			System.out.println("mode2timeminus time : "+mode2timeminus);
+			System.out.println("Readtime + mode2time : "+(readtime+mode2timeminus));
+			
 			if(readtime+mode2timeminus>(Double.parseDouble(MyContants.fixtime)*60) && mode2timeminus!=0)
 			{
 				isCompletetest=true;
