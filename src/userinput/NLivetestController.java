@@ -253,7 +253,7 @@ public class NLivetestController implements Initializable {
 
 	void setBubblePoints(double pr) {
 
-		
+		System.out.println("set mode 1");
 		
 		double lastp=highPressureCheck;
 		double currp=DataStore.ConvertPressure(pr);
