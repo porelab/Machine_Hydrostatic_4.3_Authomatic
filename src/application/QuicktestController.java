@@ -67,10 +67,11 @@ public class QuicktestController implements Initializable {
 		btndelete.setVisible(false);
 		stepsizeslider.setMin(1);
 		stepsizeslider.setValue(15);
+		setSamplemode();
 		setTestMode();
 		setStepSize();
 		LoadSamples();
-		setSamplemode();
+		
 
 		stepsizeslider.valueProperty().addListener(new ChangeListener<Number>() {
 
