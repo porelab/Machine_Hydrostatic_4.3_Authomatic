@@ -397,12 +397,12 @@ public class NLivetestController implements Initializable {
 
 			if (inilizedPressure) {
 				inilizedPressure = false;
-				double per = (double) (endPressure) * 100
+				double per = (double) (endPressure+2) * 100
 						/ Integer.parseInt(DataStore.getPr());
 				int max = 65535;
 				double prCount = (double) per * max / 100;
 				lastPrCount = (int) prCount;
-				print("Pr set :" + prCount + "\nEnd Pr : " + endPressure);
+				print("Pr set :" + prCount + "\nEnd Pr : " + (endPressure+2));
 				Mycommand.setDACValue('1', lastPrCount, 500);
 			}
 
