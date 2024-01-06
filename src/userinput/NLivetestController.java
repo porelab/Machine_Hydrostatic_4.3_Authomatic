@@ -1589,15 +1589,29 @@ public class NLivetestController implements Initializable {
 				cs.wtirefile(f.getPath() + "/" + MyContants.sampleid + "_"
 						+ findInt(ff) + ".csv");
 				double bpress;
-				if (recorddata.size() > 2) {
-					result = "FAIL";
-					bpress = recorddata.get(2);
-				} else {
-
-					result = "PASS";
-					bpress = highPressure;
-
+				
+				if(MyContants.smode.equals("mode2"))
+				{
+					if (recorddata.size() > 0) {
+						result = "FAIL";
+						bpress = recorddata.get(0);
+					} else {
+						result = "PASS";
+						bpress = highPressure;
+					}
 				}
+				else
+				{
+					if (recorddata.size() > 2) {
+						result = "FAIL";
+						bpress = recorddata.get(2);
+					} else {
+						result = "PASS";
+						bpress = highPressure;
+					}
+				}
+				
+			
 
 				cs.firstLine("hydrostatic");
 				cs.newLine("testname", "hydrostatic");
