@@ -304,6 +304,7 @@ public class NLivetestController implements Initializable {
 				double prCount = (double) per * max / 100;
 				lastPrCount = (int) prCount;
 				print("PR Count :" + prCount + "\nPr : " + initialPR);
+				System.out.println("set Pr");
 				Mycommand.setDACValue('1', lastPrCount, 500);
 			}
 
@@ -323,6 +324,7 @@ public class NLivetestController implements Initializable {
 
 				lastPrCount = lastPrCount + (int) prCount;
 				print("total PR count : " + lastPrCount);
+				System.out.println("set Pr");
 				Mycommand.setDACValue('1', lastPrCount, 200);
 
 				prn++;
@@ -402,7 +404,8 @@ public class NLivetestController implements Initializable {
 				int max = 65535;
 				double prCount = (double) per * max / 100;
 				lastPrCount = (int) prCount;
-				print("Pr set :" + prCount + "\nEnd Pr : " + (endPressure+2));
+				print("Pr set :" + lastPrCount + "\nEnd Pr : " + (endPressure+2));
+				System.out.println("set Pr");
 				Mycommand.setDACValue('1', lastPrCount, 500);
 			}
 
@@ -434,8 +437,8 @@ public class NLivetestController implements Initializable {
 				double per = dropPer;
 				double diff = (double) curpress * per / 100;
 
-				System.out.println("Last Pr : " + curpress);
-				System.out.println("Current  : " + pr);
+				//System.out.println("Last Pr : " + curpress);
+				//System.out.println("Current  : " + pr);
 
 				System.out.println("Diff : " + (curpress - diff));
 				if (pr < (curpress - diff)) {
@@ -458,10 +461,10 @@ public class NLivetestController implements Initializable {
 			System.out.println("mode2timeminus time : "+mode2timeminus);
 			System.out.println("Readtime + mode2time : "+(readtime+mode2timeminus));
 			
-			if(readtime+mode2timeminus>(Double.parseDouble(MyContants.fixtime)*60) && mode2timeminus!=0)
-			{
-				isCompletetest=true;
-			}
+//			if(readtime+mode2timeminus>(Double.parseDouble(MyContants.fixtime)*60) && mode2timeminus!=0)
+//			{
+//				isCompletetest=true;
+//			}
 			if (isCompletetest) {
 				completeTest();
 				Platform.runLater(new Runnable() {
@@ -1503,6 +1506,7 @@ public class NLivetestController implements Initializable {
 						print("testtype = 3 : PR Count :" + prCount + "\nPr : " + prCountint);
 						
 						testtype = 3;
+						System.out.println("set Pr");
 						Mycommand.setDACValue('1', prCountint, 500);
 						setDelay(1200);
 					} else {
@@ -1514,6 +1518,7 @@ public class NLivetestController implements Initializable {
 						int prCountint = (int) prCount;
 						print("testtype = 2 :PR Count :" + prCount + "\nPr : " + prCountint);
 						testtype = 2;
+						System.out.println("set Pr");
 						Mycommand.setDACValue('1', prCountint, 500);
 						setDelay(1200);
 					}
