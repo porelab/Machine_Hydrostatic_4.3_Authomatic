@@ -310,7 +310,7 @@ public class NLivetestController implements Initializable {
 			if (pr > prCheck) {
 
 				System.out.println("Mode : " + MyContants.smode);
-				double increment = (MyContants.smode == "mode2" ? prx
+				double increment = (MyContants.smode.equals("mode2") ? prx
 						+ (prn * pry) : prx);
 				print("Increment \nPrx: " + prx + "pry: " + pry + " prn: "
 						+ prn + "\nAnswer : " + increment);
@@ -364,7 +364,7 @@ public class NLivetestController implements Initializable {
 
 	void setBubblePoints1(double pr) {
 
-		System.out.println("set mode 1 : "+pr);
+		System.out.println("set mode 2 : "+pr);
 		
 		if (pr > 0.01) {
 
