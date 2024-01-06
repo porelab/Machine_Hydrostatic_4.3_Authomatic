@@ -460,7 +460,8 @@ public class NLivetestController implements Initializable {
 			System.out.println("Read time : "+readtime);
 			System.out.println("mode2timeminus time : "+mode2timeminus);
 			System.out.println("Readtime + mode2time : "+(readtime+mode2timeminus));
-			
+			System.out.println("Fix time : "+Double.parseDouble(MyContants.fixtime)*60);
+			System.out.println("Check : "+(readtime-mode2timeminus)+" > "+((Double.parseDouble(MyContants.fixtime)*60)));
 			if(readtime-mode2timeminus>(Double.parseDouble(MyContants.fixtime)*60) && mode2timeminus!=0)
 			{
 				isCompletetest=true;
