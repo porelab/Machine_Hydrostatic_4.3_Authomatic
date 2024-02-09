@@ -251,6 +251,26 @@ public class NLivetestController implements Initializable {
 
 	}
 
+	void setValveLatching(){
+		List<String> data=DataStore.getAdmin_screen1();
+		String temp="";
+		for(int i=0;i<14;i++)
+		{
+			temp=temp+"0";
+			if(i<8)
+			{
+			temp=temp+data.get(i);
+			}
+			else
+			{
+			temp=temp+"0";
+			}
+		}
+		
+		Mycommand.setLacthing(temp, 1000);
+	}
+	
+	
 	void setBubblePoints(double pr) {
 
 		
@@ -627,8 +647,9 @@ public class NLivetestController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub
 
+		
 		setInitialData();
-
+		setValveLatching();
 		// Myapp.PrintAll();
 		isSkiptest = new SimpleBooleanProperty(false);
 		isAbourtest = new SimpleBooleanProperty(false);
